@@ -15,14 +15,12 @@ from openregistry.lots.core.constants import (
 
 from openregistry.lots.redemption.models import Lot
 from openregistry.lots.redemption.tests.json_data import (
-    auction_english_data,
-    auction_second_english_data,
+    auction_common,
     test_loki_item_data
 )
 from openregistry.lots.redemption.constants import (
     STATUS_CHANGES,
     LOT_STATUSES,
-    DEFAULT_DUTCH_STEPS,
     PLATFORM_LEGAL_DETAILS_DOC_DATA
 )
 from openregistry.lots.redemption.tests.base import (
@@ -96,27 +94,11 @@ def auction_autocreation(self):
     self.assertEqual(response.status, '201 Created')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data']['status'], 'draft')
-    self.assertEqual(len(response.json['data']['auctions']), 3)
-    auctions = sorted(response.json['data']['auctions'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
-    second_english = auctions[1]
-    insider = auctions[2]
+    self.assertEqual(len(response.json['data']['auctions']), 1)
+    auction = response.json['data']['auctions'][0]
 
-    self.assertEqual(english['procurementMethodType'], 'sellout.english')
-    self.assertEqual(english['tenderAttempts'], 1)
-    self.assertEqual(english['status'], 'scheduled')
-    self.assertEqual(english['auctionParameters']['type'], 'english')
-
-    self.assertEqual(second_english['procurementMethodType'], 'sellout.english')
-    self.assertEqual(second_english['tenderAttempts'], 2)
-    self.assertEqual(second_english['status'], 'scheduled')
-    self.assertEqual(second_english['auctionParameters']['type'], 'english')
-
-    self.assertEqual(insider['procurementMethodType'], 'sellout.insider')
-    self.assertEqual(insider['tenderAttempts'], 3)
-    self.assertEqual(insider['status'], 'scheduled')
-    self.assertEqual(insider['auctionParameters']['type'], 'insider')
-    self.assertEqual(insider['auctionParameters']['dutchSteps'], DEFAULT_DUTCH_STEPS)
+    self.assertEqual(auction['procurementMethodType'], 'procedure.name')
+    self.assertEqual(auction['status'], 'scheduled')
 
 
 def check_change_to_verification(self):
@@ -129,12 +111,9 @@ def check_change_to_verification(self):
     self.assertEqual(lot['status'], 'draft')
 
     response = self.app.get('/{}/auctions'.format(lot['id']))
-    auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
-    second_english = auctions[1]
+    auction = response.json['data'][0]
 
-    first_english_data = deepcopy(auction_english_data)
-    first_english_data['auctionPeriod']['startDate'] = get_now().isoformat()
+    auction_data = deepcopy(auction_common)
 
 
     response = self.app.get('/{}'.format(lot['id']))
@@ -166,24 +145,16 @@ def check_change_to_verification(self):
         response.json['errors'][0]['description'][0],
         {
             'value': ['This field is required.'],
-            'minimalStep': ['This field is required.'],
-            'auctionPeriod': ['This field is required.'],
             'guarantee': ['This field is required.'],
             'bankAccount': ['This field is required.'],
         }
     )
-    self.assertEqual(
-        response.json['errors'][0]['description'][1],
-        {
-            'tenderingDuration': ['This field is required.'],
-        }
-    )
 
-    first_english_data_without_bankAccount = deepcopy(first_english_data)
-    del first_english_data_without_bankAccount['bankAccount']
+    auction_data_without_bankAccount = deepcopy(auction_data)
+    del auction_data_without_bankAccount['bankAccount']
     response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], english['id']),
-        params={'data': first_english_data_without_bankAccount}, headers=access_header)
+        '/{}/auctions/{}'.format(lot['id'], auction['id']),
+        params={'data': auction_data_without_bankAccount}, headers=access_header)
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
 
@@ -203,35 +174,8 @@ def check_change_to_verification(self):
     )
 
     response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], english['id']),
-        params={'data': first_english_data}, headers=access_header)
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.content_type, 'application/json')
-
-    # Check if all required fields are filled in second english auction
-    response = self.app.patch_json(
-        '/{}'.format(lot['id']),
-        {"data": {'status': 'verification'}},
-        status=422,
-        headers=access_header
-    )
-    self.assertEqual(response.status, '422 Unprocessable Entity')
-    self.assertEqual(response.content_type, 'application/json')
-    self.assertEqual(
-        response.json['errors'][0]['description'][0],
-        {
-            'tenderingDuration': ['This field is required.'],
-        }
-    )
-    response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], second_english['id']),
-        params={'data': auction_second_english_data}, headers=access_header)
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.content_type, 'application/json')
-
-    response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], english['id']),
-        params={'data': auction_english_data}, headers=access_header)
+        '/{}/auctions/{}'.format(lot['id'], auction['id']),
+        params={'data': auction_data}, headers=access_header)
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
 
@@ -774,14 +718,6 @@ def change_pending_lot(self):
     self.app.authorization = ('Basic', ('chronograph', ''))
     for status in STATUS_BLACKLIST['pending']['chronograph']:
         check_patch_status_403(self, '/{}'.format(lot['id']), status)
-    # Chronograph patch but earlier than next_check
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   params={'data': {'status': 'active.salable'}})
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.content_type, 'application/json')
-    self.assertNotEqual(response.json['data']['status'], 'active.salable')
-    self.assertEqual(response.json['data']['status'], 'pending')
-
 
     self.app.authorization = ('Basic', ('administrator', ''))
 
@@ -1008,8 +944,6 @@ def change_active_auction_lot(self):
 
 
     self.app.authorization = ('Basic', ('administrator', ''))
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'active.salable')
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'active.auction')
     check_patch_status_200(self, '/{}'.format(lot['id']), 'active.contracting')
 
     # Create new lot in 'active.auction' status
@@ -1370,8 +1304,6 @@ def change_pending_deleted_lot(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'deleted')
     response = self.app.get('/{}'.format(lot['id']))
     self.assertEqual(response.json['data']['auctions'][0]['status'], 'cancelled')
-    self.assertEqual(response.json['data']['auctions'][1]['status'], 'cancelled')
-    self.assertEqual(response.json['data']['auctions'][2]['status'], 'cancelled')
     self.assertEqual(response.json['data']['contracts'][0]['status'], 'cancelled')
 
     # Create new lot in 'pending.deleted' status
@@ -1405,8 +1337,6 @@ def change_pending_deleted_lot(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'deleted')
     response = self.app.get('/{}'.format(lot['id']))
     self.assertEqual(response.json['data']['auctions'][0]['status'], 'cancelled')
-    self.assertEqual(response.json['data']['auctions'][1]['status'], 'cancelled')
-    self.assertEqual(response.json['data']['auctions'][2]['status'], 'cancelled')
     self.assertEqual(response.json['data']['contracts'][0]['status'], 'cancelled')
 
     # Create new lot in 'pending.deleted' status
@@ -1427,7 +1357,6 @@ def check_auction_status_lot_workflow(self):
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(len(response.json['data']), 0)
 
-
     lot_info = self.initial_data
 
     # Create new lot in 'active.auction' status
@@ -1435,24 +1364,20 @@ def check_auction_status_lot_workflow(self):
     json = create_single_lot(self, lot_info, 'active.auction')
     lot = json['data']
     self.assertEqual(lot['status'], 'active.auction')
-    auctions = sorted(lot['auctions'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
+    auction = lot['auctions'][0]
 
 
     self.app.authorization = ('Basic', ('convoy', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
+    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], auction['id']),
                                    params={'data': {'status': 'unsuccessful'}})
     self.assertEqual(response.json['data']['status'], 'unsuccessful')
 
     response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.json['data']['status'], 'active.salable')
-    auctions = sorted(response.json['data']['auctions'], key=lambda a: a['tenderAttempts'])
+    self.assertEqual(response.json['data']['status'], 'pending.dissolution')
     contract = response.json['data']['contracts'][0]
 
-    self.assertEqual(auctions[0]['status'], 'unsuccessful')
-    self.assertEqual(auctions[1]['status'], 'scheduled')
-    self.assertEqual(auctions[2]['status'], 'scheduled')
-    self.assertEqual(contract['status'], 'scheduled')
+    self.assertEqual(response.json['data']['auctions'][0]['status'], 'unsuccessful')
+    self.assertEqual(contract['status'], 'cancelled')
 
 
     # Create new lot in 'active.auction' status
@@ -1461,58 +1386,19 @@ def check_auction_status_lot_workflow(self):
     lot = json['data']
     self.assertEqual(lot['status'], 'active.auction')
 
-    auctions = sorted(lot['auctions'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
+    auction = lot['auctions'][0]
 
     self.app.authorization = ('Basic', ('convoy', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
+    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], auction['id']),
                                    params={'data': {'status': 'cancelled'}})
     self.assertEqual(response.json['data']['status'], 'cancelled')
 
     response = self.app.get('/{}'.format(lot['id']))
     self.assertEqual(response.json['data']['status'], 'pending.dissolution')
-    auctions = sorted(response.json['data']['auctions'], key=lambda a: a['tenderAttempts'])
+    auction = response.json['data']['auctions'][0]
     contract = response.json['data']['contracts'][0]
 
-    self.assertEqual(auctions[0]['status'], 'cancelled')
-    self.assertEqual(auctions[1]['status'], 'cancelled')
-    self.assertEqual(auctions[2]['status'], 'cancelled')
-    self.assertEqual(contract['status'], 'cancelled')
-
-    # Create new lot in 'active.auction' status
-    self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
-    lot = json['data']
-    self.assertEqual(lot['status'], 'active.auction')
-
-    auctions = sorted(lot['auctions'], key=lambda a: a['tenderAttempts'])
-    insider = auctions[2]
-
-    # Change statuses of two first auctions to unsuccessful
-    fromdb = self.db.get(lot['id'])
-    fromdb = self.lot_model(fromdb)
-
-    fromdb.auctions[0].status = 'unsuccessful'
-    fromdb.auctions[1].status = 'unsuccessful'
-    fromdb = fromdb.store(self.db)
-    lot = fromdb
-    self.assertEqual(fromdb.id, lot['id'])
-
-
-    self.app.authorization = ('Basic', ('convoy', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], insider['id']),
-                                   params={'data': {'status': 'unsuccessful'}})
-
-    self.assertEqual(response.json['data']['status'], 'unsuccessful')
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.json['data']['status'], 'pending.dissolution')
-    auctions = sorted(response.json['data']['auctions'], key=lambda a: a['tenderAttempts'])
-    contract = response.json['data']['contracts'][0]
-
-    self.assertEqual(auctions[0]['status'], 'unsuccessful')
-    self.assertEqual(auctions[1]['status'], 'unsuccessful')
-    self.assertEqual(auctions[2]['status'], 'unsuccessful')
+    self.assertEqual(auction['status'], 'cancelled')
     self.assertEqual(contract['status'], 'cancelled')
 
     # Create new lot in 'active.salable' status
@@ -1520,11 +1406,10 @@ def check_auction_status_lot_workflow(self):
     json = create_single_lot(self, lot_info, 'active.salable')
     lot = json['data']
     self.assertEqual(lot['status'], 'active.salable')
-    auctions = sorted(lot['auctions'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
+    auction = lot['auctions'][0]
 
     self.app.authorization = ('Basic', ('concierge', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
+    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], auction['id']),
                                    params={'data': {'status': 'active'}})
     self.assertEqual(response.json['data']['status'], 'active')
 
@@ -1536,21 +1421,18 @@ def check_auction_status_lot_workflow(self):
     json = create_single_lot(self, lot_info, 'active.auction')
     lot = json['data']
     self.assertEqual(lot['status'], 'active.auction')
-    auctions = sorted(lot['auctions'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
+    auction = lot['auctions'][0]
 
     self.app.authorization = ('Basic', ('convoy', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
+    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], auction['id']),
                                    params={'data': {'status': 'complete'}})
     self.assertEqual(response.json['data']['status'], 'complete')
 
     response = self.app.get('/{}'.format(lot['id']))
     self.assertEqual(response.json['data']['status'], 'active.contracting')
-    auctions = sorted(response.json['data']['auctions'], key=lambda a: a['tenderAttempts'])
+    auction = response.json['data']['auctions'][0]
 
-    self.assertEqual(auctions[0]['status'], 'complete')
-    self.assertEqual(auctions[1]['status'], 'cancelled')
-    self.assertEqual(auctions[2]['status'], 'cancelled')
+    self.assertEqual(auction['status'], 'complete')
 
 
 def check_contract_status_workflow(self):

@@ -4,7 +4,7 @@ from copy import deepcopy
 from decimal import Decimal, ROUND_HALF_UP
 from uuid import uuid4
 
-from openregistry.lots.redemption.utils import get_now
+from openregistry.lots.core.utils import get_now
 from openregistry.lots.core.constants import (
     SANDBOX_MODE,
 )
@@ -16,8 +16,7 @@ from openregistry.lots.core.tests.base import (
 )
 from openregistry.lots.redemption.tests.json_data import (
     test_redemption_lot_data,
-    auction_english_data,
-    auction_second_english_data,
+    auction_common,
     test_loki_item_data
 )
 
@@ -67,19 +66,11 @@ def add_decisions(self, lot):
 
 def add_auctions(self, lot, access_header):
     response = self.app.get('/{}/auctions'.format(lot['id']))
-    auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
-    second_english = auctions[1]
+    english = response.json['data'][0]
 
     response = self.app.patch_json(
         '/{}/auctions/{}'.format(lot['id'], english['id']),
-        params={'data': auction_english_data}, headers=access_header)
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.content_type, 'application/json')
-
-    response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], second_english['id']),
-        params={'data': auction_second_english_data}, headers=access_header)
+        params={'data': auction_common}, headers=access_header)
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
 
@@ -114,7 +105,7 @@ def create_single_lot(self, data, status=None):
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data']['status'], 'draft')
     self.assertNotIn('decisions', response.json['data'])
-    self.assertEqual(len(response.json['data']['auctions']), 3)
+    self.assertEqual(len(response.json['data']['auctions']), 1)
     token = response.json['access']['token']
     lot_id = response.json['data']['id']
 

@@ -4,12 +4,6 @@ from copy import deepcopy
 
 from openregistry.lots.core.utils import (
     get_now,
-    calculate_business_date
-)
-
-from openregistry.lots.redemption.models import (
-    Lot,
-    Period
 )
 from openregistry.lots.redemption.tests.json_data import test_loki_item_data
 from openregistry.lots.redemption.tests.base import (
