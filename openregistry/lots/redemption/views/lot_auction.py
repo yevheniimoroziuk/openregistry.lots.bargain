@@ -8,7 +8,6 @@ from openregistry.lots.core.utils import (
     oplotsresource, apply_patch, save_lot
 )
 from openregistry.lots.redemption.utils import (
-    update_auctions,
     process_convoy_auction_report_result,
     process_concierge_auction_status_change
 )
@@ -45,7 +44,6 @@ class LotAuctionResource(APIResource):
     def patch(self):
         """Lot Auction Update"""
         apply_patch(self.request, save=False, src=self.request.context.serialize())
-        update_auctions(self.request.validated['lot'])
 
         if self.request.authenticated_role == 'convoy':
             process_convoy_auction_report_result(self.request)

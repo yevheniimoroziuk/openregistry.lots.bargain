@@ -10,20 +10,16 @@ from openregistry.lots.core.validation import (
 )
 from openregistry.lots.core.utils import (
     get_now,
-    calculate_business_date,
     apply_patch,
     save_lot,
     validate_with,
 )
 from openregistry.lots.redemption.utils import (
-    check_status,
-    update_auctions,
     process_lot_status_change
 )
 from .constants import (
     STATUS_CHANGES,
     ITEM_EDITING_STATUSES,
-    DEFAULT_DUTCH_STEPS,
     DECISION_EDITING_STATUSES,
     CONTRACT_TYPE,
     PLATFORM_LEGAL_DETAILS_DOC_DATA
@@ -93,22 +89,16 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
     def _create_auctions(self, request):
         lot = request.validated['lot']
         lot.date = get_now()
-        auction_types = ['sellout.english', 'sellout.english', 'sellout.insider']
+        auction_types = ['procedure.name']
         auction_class = lot.__class__.auctions.model_class
-        for tenderAttempts, auction_type in enumerate(auction_types, 1):
+
+        for auction_type in auction_types:
             data = dict()
-            data['tenderAttempts'] = tenderAttempts
             data['procurementMethodType'] = auction_type
             data['status'] = 'scheduled'
-            data['auctionParameters'] = {}
-            if auction_type == 'sellout.english':
-                data['auctionParameters']['type'] = 'english'
-            elif auction_type == 'sellout.insider':
-                data['auctionParameters']['type'] = 'insider'
-                data['auctionParameters']['dutchSteps'] = DEFAULT_DUTCH_STEPS
+
             data['__parent__'] = lot
             lot.auctions.append(auction_class(data))
-        update_auctions(lot)
 
     def _create_contracts(self, request):
         lot = request.validated['lot']
@@ -129,10 +119,6 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
 
     def change_lot(self, request):
         self._validate(request, self.change_validation)
-        if request.authenticated_role == 'chronograph':
-            apply_patch(request, save=False, src=request.validated['lot_src'])
-            check_status(request)
-            save_lot(request)
 
         if request.authenticated_role in ('concierge', 'Administrator'):
             process_lot_status_change(request)
