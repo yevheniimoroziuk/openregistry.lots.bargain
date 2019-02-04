@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from copy import copy
-from datetime import timedelta
 from openregistry.lots.core.constants import LOKI_DOCUMENT_TYPES
 
 
@@ -99,18 +98,7 @@ STATUS_CHANGES = {
         "next_status": {}
     },
 }
-AUCTION_DOCUMENT_TYPES = [
-    'notice',
-    'technicalSpecifications',
-    'evaluationCriteria',
-    'illustration',
-    'x_PublicAssetCertificate',
-    'x_PlatformLegalDetails',
-    'x_presentation',
-    'bidders',
-    'x_nda',
-    'x_dgfAssetFamiliarization'
-]
+
 
 LOT_DOCUMENT_TYPES = copy(LOKI_DOCUMENT_TYPES)
 LOT_DOCUMENT_TYPES.extend(
@@ -128,11 +116,7 @@ PLATFORM_LEGAL_DETAILS_DOC_DATA = {
 }
 
 
-DEFAULT_DUTCH_STEPS = 99
-
 DEFAULT_LOT_TYPE = 'redemption'
-DEFAULT_REGISTRATION_FEE_BEFORE_2019 = 744.6
-DEFAULT_REGISTRATION_FEE_AFTER_2019 = 834.6
 
 DECISION_EDITING_STATUSES = ['pending', 'composing']
 CURRENCY_CHOICES = ['UAH']

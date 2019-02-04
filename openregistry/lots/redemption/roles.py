@@ -24,39 +24,20 @@ item_roles = {
 
 auction_create_role = blacklist('id', 'status', 'auctionID', 'relatedProcessID', 'procurementMethodType')
 auction_common_edit_role = blacklist(
-    'id', 'auctionID', 'procurementMethodType', 'tenderAttempts',
+    'id', 'auctionID', 'procurementMethodType',
     'status', 'relatedProcessID'
 )
 auction_view_role = (schematics_default_role + blacklist())
-edit_first_english = (auction_common_edit_role + blacklist('tenderingDuration'))
-edit_second_english = (
-    auction_common_edit_role +
-    blacklist('value', 'minimalStep', 'guarantee', 'registrationFee', 'auctionPeriod', 'bankAccount'))
-edit_insider = (
-    auction_common_edit_role +
-    blacklist(
-        'tenderingDuration', 'value', 'minimalStep', 'guarantee',
-        'registrationFee', 'auctionPeriod', 'bankAccount'
-    )
-)
+edit_first_english = auction_common_edit_role
+
 
 auction_roles = {
     'create': auction_create_role,
     'edit': auction_common_edit_role,
     'view': auction_view_role,
-    'edit_1.sellout.english': edit_first_english,
-    'edit_2.sellout.english': edit_second_english,
-    'edit_3.sellout.insider': edit_insider,
+    'edit_procedure.name': edit_first_english,
     'convoy': whitelist('status'),
     'concierge': whitelist('status', 'auctionID', 'relatedProcessID')
-}
-auction_period_roles = {
-    'create': blacklist('endDate'),
-    'edit': blacklist('endDate'),
-    'edit_1.sellout.english': blacklist('endDate'),
-    'edit_2.sellout.english': blacklist('endDate'),
-    'edit_3.sellout.insider': blacklist('endDate'),
-
 }
 
 
