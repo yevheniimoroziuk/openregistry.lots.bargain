@@ -39,7 +39,7 @@ STATUS_CHANGES = {
         "editing_permissions": ["lot_owner", "Administrator", "chronograph"],
         "next_status": {
             "pending.deleted": ["lot_owner", "Administrator"],
-            "active.salable": ["chronograph", "Administrator"],
+            "active.salable": ["lot_owner", "Administrator"],
         }
     },
     "pending.deleted": {
