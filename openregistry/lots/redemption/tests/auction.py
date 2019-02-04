@@ -12,7 +12,6 @@ from openregistry.lots.redemption.tests.blanks.auction_blanks import (
     patch_english_auction,
     patch_second_english_auction,
     patch_insider_auction,
-    rectificationPeriod_auction_workflow,
     procurementMethodDetails_check_with_sandbox,
     procurementMethodDetails_check_without_sandbox,
     submissionMethodDetails_check,
@@ -31,7 +30,6 @@ class LotAuctionResourceTest(LotContentWebTest):
     test_patch_english_auction = snitch(patch_english_auction)
     test_patch_second_english_auction = snitch(patch_second_english_auction)
     test_patch_insider_auction = snitch(patch_insider_auction)
-    test_rectificationPeriod_auction_workflow = snitch(rectificationPeriod_auction_workflow)
     test_procurementMethodDetails_check_with_sandbox = snitch(procurementMethodDetails_check_with_sandbox)
     test_procurementMethodDetails_check_without_sandbox = snitch(procurementMethodDetails_check_without_sandbox)
     submissionMethodDetails_check_without_sandbox = snitch(submissionMethodDetails_check)

@@ -18,7 +18,6 @@ from openregistry.lots.core.validation import (
 )
 from openregistry.lots.redemption.validation import (
     validate_update_auction_document_in_not_allowed_status,
-    rectificationPeriod_auction_document_validation,
     validate_file_upload,
     validate_document_data
 )
@@ -26,19 +25,16 @@ from openregistry.lots.redemption.validation import (
 post_validators = (
     validate_file_upload,
     validate_update_auction_document_in_not_allowed_status,
-    rectificationPeriod_auction_document_validation
 )
 put_validators = (
     validate_document_data,
     validate_update_auction_document_in_not_allowed_status,
     validate_lot_document_update_not_by_author_or_lot_owner,
-    rectificationPeriod_auction_document_validation
 )
 patch_validators = (
     validate_patch_document_data,
     validate_update_auction_document_in_not_allowed_status,
     validate_lot_document_update_not_by_author_or_lot_owner,
-    rectificationPeriod_auction_document_validation
 )
 
 

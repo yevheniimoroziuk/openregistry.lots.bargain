@@ -67,7 +67,7 @@ lot_create_role = (whitelist(
 lot_edit_role = (blacklist(
     'owner_token', 'owner', '_attachments', 'contracts',
     'revisions', 'date', 'dateModified', 'documents', 'auctions', 'relatedProcesses',
-    'lotID', 'mode', 'doc_id', 'rectificationPeriod', 'decisions') + lots_embedded_role)
+    'lotID', 'mode', 'doc_id', 'decisions') + lots_embedded_role)
 view_role = (blacklist('owner_token', '_attachments', 'revisions') + lots_embedded_role)
 
 Administrator_role = whitelist('status', 'mode')
@@ -107,7 +107,6 @@ lot_roles = {
     # Pending role
     'pending': view_role,
     'edit_pending': lot_edit_role,
-    'edit_pendingAfterRectificationPeriod': whitelist('status'),
     # Pending.deleted role
     'pending.deleted': view_role,
     'edit_pending.deleted': whitelist(),

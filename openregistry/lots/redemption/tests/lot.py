@@ -18,7 +18,6 @@ from openregistry.lots.redemption.tests.blanks.lot_blanks import (
     # LotResourceTest
     change_draft_lot,
     change_dissolved_lot,
-    rectificationPeriod_workflow,
     change_pending_lot,
     change_composing_lot,
     change_verification_lot,
@@ -71,7 +70,6 @@ class LotResourceTest(BaseLotWebTest, ResourceTestMixin):
     test_change_verification_lot = snitch(change_verification_lot)
     test_check_change_to_verification = snitch(check_change_to_verification)
     test_change_composing_lot = snitch(change_composing_lot)
-    test_rectificationPeriod_workflow = snitch(rectificationPeriod_workflow)
     test_auction_autocreation = snitch(auction_autocreation)
     test_check_auction_status_lot_workflow = snitch(check_auction_status_lot_workflow)
     test_check_contract_status_workflow = snitch(check_contract_status_workflow)

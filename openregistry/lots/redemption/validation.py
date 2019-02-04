@@ -14,10 +14,6 @@ from openregistry.lots.core.utils import (
 from openregistry.lots.core.validation import (
     validate_data
 )
-from openregistry.lots.redemption.constants import (
-    DAYS_AFTER_RECTIFICATION_PERIOD,
-    RECTIFICATION_PERIOD_DURATION
-)
 
 
 # Document Validation
@@ -65,26 +61,6 @@ def validate_document_operation_in_not_allowed_lot_status(request, error_handler
                               'Can\'t update document in current ({}) lot status'.format(status))
 
 
-def rectificationPeriod_document_validation(request, error_handler, **kwargs):
-    is_period_ended = bool(
-        request.validated['lot'].rectificationPeriod and
-        request.validated['lot'].rectificationPeriod.endDate < get_now()
-    )
-    if bool((is_period_ended and request.validated['document'].documentType != 'cancellationDetails') and
-            request.method == 'POST'):
-        request.errors.add(
-            'body',
-            'mode',
-            'You can add only document with cancellationDetails after rectification period'
-        )
-        request.errors.status = 403
-        raise error_handler(request)
-
-    if is_period_ended and request.method in ['PUT', 'PATCH']:
-        request.errors.add('body', 'mode', 'You can\'t change documents after rectification period')
-        request.errors.status = 403
-        raise error_handler(request)
-
 
 # Item validation
 def validate_item_data(request, error_handler, **kwargs):
@@ -101,14 +77,6 @@ def validate_patch_item_data(request, error_handler, **kwargs):
     validate_data(request, model)
 
 
-def rectificationPeriod_item_validation(request, error_handler, **kwargs):
-    if bool(request.validated['lot'].rectificationPeriod and
-            request.validated['lot'].rectificationPeriod.endDate < get_now()):
-        request.errors.add('body', 'mode', 'You can\'t change items after rectification period')
-        request.errors.status = 403
-        raise error_handler(request)
-
-
 # Decision validation
 def validate_decision_by_decisionOf(request, error_handler, **kwargs):
     decision = request.validated['decision']
@@ -118,39 +86,6 @@ def validate_decision_by_decisionOf(request, error_handler, **kwargs):
             'mode',
             'Can edit only decisions which have decisionOf equal to \'lot\'.'
         )
-        request.errors.status = 403
-        raise error_handler(request)
-
-
-# Auction validation
-def rectificationPeriod_auction_document_validation(request, error_handler, **kwargs):
-    is_period_ended = bool(
-        request.validated['lot'].rectificationPeriod and
-        request.validated['lot'].rectificationPeriod.endDate < get_now()
-    )
-    if is_period_ended and request.method == 'POST':
-        request.errors.add(
-            'body',
-            'mode',
-            'You can\'t add documents to auction after rectification period'
-        )
-        request.errors.status = 403
-        raise error_handler(request)
-
-    if is_period_ended and request.method in ['PUT', 'PATCH']:
-        request.errors.add('body', 'mode', 'You can\'t change documents after rectification period')
-        request.errors.status = 403
-        raise error_handler(request)
-
-
-def rectificationPeriod_auction_validation(request, error_handler, **kwargs):
-    is_rectificationPeriod_finished = bool(
-        request.validated['lot'].rectificationPeriod and
-        request.validated['lot'].rectificationPeriod.endDate < get_now()
-    )
-
-    if request.authenticated_role not in ['convoy', 'concierge'] and is_rectificationPeriod_finished:
-        request.errors.add('body', 'mode', 'You can\'t change auctions after rectification period')
         request.errors.status = 403
         raise error_handler(request)
 
@@ -243,26 +178,6 @@ def validate_verification_status(request, error_handler):
         # Raise errors from first and second auction
         if auction_error_message['description']:
             request.errors.add(**auction_error_message)
-            request.errors.status = 422
-            raise error_handler(request)
-
-        duration = DAYS_AFTER_RECTIFICATION_PERIOD + RECTIFICATION_PERIOD_DURATION
-
-        min_auction_start_date = calculate_business_date(
-            start=get_now(),
-            delta=duration,
-            context=lot,
-            working_days=True
-        )
-
-        auction_period = english.auctionPeriod
-        if auction_period and min_auction_start_date > auction_period.startDate:
-            request.errors.add(
-                'body',
-                'mode',
-                'startDate of auctionPeriod must be '
-                'at least in {} days after today'.format(duration.days)
-            )
             request.errors.status = 422
             raise error_handler(request)
 

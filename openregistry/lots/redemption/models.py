@@ -49,7 +49,6 @@ from openregistry.lots.redemption.constants import (
     LOT_STATUSES,
     AUCTION_STATUSES,
     AUCTION_DOCUMENT_TYPES,
-    DAYS_AFTER_RECTIFICATION_PERIOD,
     CONTRACT_STATUSES,
     LOT_DOCUMENT_TYPES,
     CURRENCY_CHOICES,
@@ -159,18 +158,6 @@ class Auction(Model):
 
     def validate_auctionPeriod(self, data, period):
         lot = get_lot(data['__parent__'])
-        if data['tenderAttempts'] == 1 and lot.rectificationPeriod:
-            min_auction_start_date = calculate_business_date(
-                start=lot.rectificationPeriod.endDate,
-                delta=DAYS_AFTER_RECTIFICATION_PERIOD,
-                context=lot,
-                working_days=True
-            )
-            if min_auction_start_date > period['startDate']:
-                raise ValidationError(
-                    'startDate of auctionPeriod must be at least '
-                    'in {} days after endDate of rectificationPeriod'.format(DAYS_AFTER_RECTIFICATION_PERIOD.days)
-                )
 
     def get_role(self):
         root = self.__parent__.__parent__
@@ -215,7 +202,6 @@ class Lot(BaseLot):
     status = StringType(choices=LOT_STATUSES, default='draft')
     description = StringType()
     lotType = StringType(default="redemption")
-    rectificationPeriod = ModelType(Period)
     lotCustodian = ModelType(AssetCustodian, serialize_when_none=False)
     lotHolder = ModelType(AssetHolder, serialize_when_none=False)
     officialRegistrationID = StringType(serialize_when_none=False)
@@ -242,21 +228,8 @@ class Lot(BaseLot):
         elif request.authenticated_role == 'caravan':
             role = 'caravan'
         else:
-            after_rectificationPeriod = bool(
-                request.context.rectificationPeriod and
-                request.context.rectificationPeriod.endDate < get_now()
-            )
-            if request.context.status == 'pending' and after_rectificationPeriod:
-                return 'edit_pendingAfterRectificationPeriod'
             role = 'edit_{}'.format(request.context.status)
         return role
-
-    @serializable(serialize_when_none=False, type=IsoDateTimeType())
-    def next_check(self):
-        checks = []
-        if self.rectificationPeriod and self.status == 'pending':
-            checks.append(self.rectificationPeriod.endDate)
-        return min(checks) if checks else None
 
     def __acl__(self):
         acl = [

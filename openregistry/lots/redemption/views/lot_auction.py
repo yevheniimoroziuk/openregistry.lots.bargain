@@ -14,12 +14,10 @@ from openregistry.lots.redemption.utils import (
 )
 from openregistry.lots.redemption.validation import (
     validate_auction_data,
-    rectificationPeriod_auction_validation,
     validate_update_auction_in_not_allowed_status
 )
 patch_validators = (
     validate_auction_data,
-    rectificationPeriod_auction_validation,
     validate_update_auction_in_not_allowed_status
 )
 

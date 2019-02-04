@@ -9,7 +9,6 @@ from openregistry.lots.redemption.tests.blanks.auction_document_blanks import (
     create_auction_document,
     patch_auction_document,
     model_validation,
-    rectificationPeriod_document_workflow
 )
 
 from openregistry.lots.redemption.tests.base import (
@@ -29,7 +28,6 @@ class LotAuctionDocumentWithDSResourceTest(LotContentWebTest):
     test_create_auction_document = snitch(create_auction_document)
     test_patch_auction_document = snitch(patch_auction_document)
     test_model_validation = snitch(model_validation)
-    test_rectification_document_workflow = snitch(rectificationPeriod_document_workflow)
 
     # status, in which operations with lot documents (adding, updating) are forbidden
     forbidden_document_modification_actions_status = 'active.salable'

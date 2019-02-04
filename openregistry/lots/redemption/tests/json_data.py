@@ -8,10 +8,7 @@ from openregistry.lots.core.tests.blanks.json_data import (
     test_document_data,
     test_item_data,
 )
-from openregistry.lots.redemption.constants import (
-    DAYS_AFTER_RECTIFICATION_PERIOD,
-    RECTIFICATION_PERIOD_DURATION
-)
+
 
 
 now = get_now()
@@ -23,7 +20,7 @@ auction_common = {
     'auctionPeriod': {
         'startDate': (calculate_business_date(
             start=now,
-            delta=DAYS_AFTER_RECTIFICATION_PERIOD + RECTIFICATION_PERIOD_DURATION,
+            delta=timedelta(days=5),
             context=None,
             working_days=True
         ) + timedelta(minutes=5)).isoformat(),
@@ -82,11 +79,11 @@ test_decision_data = {
     'decisionDate': get_now().isoformat()
 }
 
-test_redemption_item_data = deepcopy(test_item_data)
-test_redemption_item_data['registrationDetails'] = {
+test_loki_item_data = deepcopy(test_item_data)
+test_loki_item_data['registrationDetails'] = {
     'status': 'unknown'
 }
-test_redemption_item_data.update(
+test_loki_item_data.update(
     {
         "unit": {"code": "code"},
         "classification": {

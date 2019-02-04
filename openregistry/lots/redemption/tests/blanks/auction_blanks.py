@@ -18,7 +18,7 @@ from openregistry.lots.redemption.constants import (
     DEFAULT_REGISTRATION_FEE_AFTER_2019
 )
 
-from openregistry.lots.redemption.tests.json_data import test_redemption_item_data
+from openregistry.lots.redemption.tests.json_data import test_loki_item_data
 from openregistry.lots.redemption.tests.base import (
     create_single_lot,
     check_patch_status_200,
@@ -56,7 +56,7 @@ def patch_auctions_with_lot(self):
 
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
     self.app.authorization = ('Basic', ('broker', ''))
 
@@ -440,61 +440,6 @@ def patch_insider_auction(self):
     self.assertNotEqual(response.json['data']['auctionParameters']['type'],
                         data['insider']['auctionParameters']['type'])
     self.assertEqual(response.json['data']['auctionParameters']['type'], default_type)
-
-
-def rectificationPeriod_auction_workflow(self):
-    rectificationPeriod = Period()
-    rectificationPeriod.startDate = get_now() - timedelta(3)
-    rectificationPeriod.endDate = calculate_business_date(rectificationPeriod.startDate,
-                                                          timedelta(1),
-                                                          None)
-    data = deepcopy(self.initial_auctions_data)
-
-    lot = self.create_resource()
-
-    # Change rectification period in db
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
-
-    fromdb = self.db.get(lot['id'])
-    fromdb = Lot(fromdb)
-
-    fromdb.status = 'pending'
-    fromdb.rectificationPeriod = rectificationPeriod
-    fromdb = fromdb.store(self.db)
-
-    self.assertEqual(fromdb.id, lot['id'])
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.json['data']['id'], lot['id'])
-
-    response = self.app.get('/{}/auctions'.format(self.resource_id))
-    auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
-
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
-                                   headers=self.access_header,
-                                   params={'data': data['english']},
-                                   status=403)
-    self.assertEqual(response.status, '403 Forbidden')
-    self.assertEqual(response.json['errors'][0]['description'], 'You can\'t change auctions after rectification period')
-
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
-                                   headers=self.access_header,
-                                   params={'data': data['english']},
-                                   status=200)
-    self.assertEqual(response.status, '200 OK')
-
-    self.app.authorization = ('Basic', ('convoy', ''))
-    response = self.app.patch_json('/{}/auctions/{}'.format(lot['id'], english['id']),
-                                   headers=self.access_header,
-                                   params={'data': data['english']},
-                                   status=200)
-    self.assertEqual(response.status, '200 OK')
 
 
 @unittest.skipIf(not SANDBOX_MODE, 'If sandbox mode is enabled auctionParameters has additional field procurementMethodDetails')

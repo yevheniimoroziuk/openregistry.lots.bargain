@@ -65,7 +65,6 @@ STATUS_CHANGES = {
         "next_status": {
             "active.contracting": ["Administrator"],
             "pending.dissolution": ["Administrator"],
-            "active.salable": ["Administrator"]
         }
     },
     "active.contracting": {
@@ -127,9 +126,6 @@ PLATFORM_LEGAL_DETAILS_DOC_DATA = {
     'documentOf': 'lot',
     'documentType': 'x_PlatformLegalDetails',
 }
-
-RECTIFICATION_PERIOD_DURATION = timedelta(days=2)
-DAYS_AFTER_RECTIFICATION_PERIOD = timedelta(days=2)
 
 
 DEFAULT_DUTCH_STEPS = 99

@@ -22,7 +22,6 @@ from openregistry.lots.redemption.utils import (
 )
 from .constants import (
     STATUS_CHANGES,
-    RECTIFICATION_PERIOD_DURATION,
     ITEM_EDITING_STATUSES,
     DEFAULT_DUTCH_STEPS,
     DECISION_EDITING_STATUSES,
@@ -84,15 +83,6 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
         validate_verification_status,
     )
 
-    def _set_rectificationPeriod(self, request):
-        data = dict()
-        data['startDate'] = get_now()
-        data['endDate'] = calculate_business_date(
-            data['startDate'],
-            RECTIFICATION_PERIOD_DURATION,
-            context=request.context)
-        request.context.rectificationPeriod = type(request.context).rectificationPeriod.model_class(data)
-
     def __init__(self, *args, **kwargs):
         super(RedemptionLotManagerAdapter, self).__init__(*args, **kwargs)
         self.related_processes_manager = RelatedProcessManager(
@@ -143,8 +133,6 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
             apply_patch(request, save=False, src=request.validated['lot_src'])
             check_status(request)
             save_lot(request)
-        elif request.validated['data'].get('status') == 'pending' and not request.context.rectificationPeriod:
-            self._set_rectificationPeriod(request)
 
         if request.authenticated_role in ('concierge', 'Administrator'):
             process_lot_status_change(request)

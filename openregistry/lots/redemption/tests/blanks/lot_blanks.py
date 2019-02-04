@@ -17,14 +17,12 @@ from openregistry.lots.redemption.models import Lot
 from openregistry.lots.redemption.tests.json_data import (
     auction_english_data,
     auction_second_english_data,
-    test_redemption_item_data
+    test_loki_item_data
 )
 from openregistry.lots.redemption.constants import (
     STATUS_CHANGES,
     LOT_STATUSES,
     DEFAULT_DUTCH_STEPS,
-    RECTIFICATION_PERIOD_DURATION,
-    DAYS_AFTER_RECTIFICATION_PERIOD,
     PLATFORM_LEGAL_DETAILS_DOC_DATA
 )
 from openregistry.lots.redemption.tests.base import (
@@ -231,21 +229,6 @@ def check_change_to_verification(self):
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
 
-    # Check if auctionPeriod.startDate is in three days after now
-    response = self.app.patch_json(
-        '/{}'.format(lot['id']),
-        {"data": {'status': 'verification'}},
-        status=422,
-        headers=access_header
-    )
-    self.assertEqual(response.status, '422 Unprocessable Entity')
-    self.assertEqual(response.content_type, 'application/json')
-    self.assertEqual(
-        response.json['errors'][0]['description'],
-        'startDate of auctionPeriod must be at least '
-        'in {} days after today'.format((RECTIFICATION_PERIOD_DURATION + DAYS_AFTER_RECTIFICATION_PERIOD).days)
-    )
-
     response = self.app.patch_json(
         '/{}/auctions/{}'.format(lot['id'], english['id']),
         params={'data': auction_english_data}, headers=access_header)
@@ -335,171 +318,6 @@ def check_change_to_verification(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
 
 
-def rectificationPeriod_workflow(self):
-    response = create_single_lot(self, self.initial_data)
-    lot = response.json['data']
-    token = response.json['access']['token']
-    access_header = {'X-Access-Token': str(token)}
-
-    self.assertNotIn('rectificationPeriod', response.json['data'])
-    self.assertNotIn('next_check', response.json['data'])
-
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': {'status': 'composing'}})
-    self.assertNotIn('rectificationPeriod', response.json['data'])
-    self.assertNotIn('next_check', response.json['data'])
-
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': {'status': 'verification'}})
-    self.assertNotIn('rectificationPeriod', response.json['data'])
-    self.assertNotIn('next_check', response.json['data'])
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    add_decisions(self, lot)
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   params={'data': {'status': 'pending', 'items': [test_redemption_item_data]}})
-    self.assertIn('rectificationPeriod', response.json['data'])
-    startDate = parse_datetime(response.json['data']['rectificationPeriod']['startDate'])
-    endDate = parse_datetime(response.json['data']['rectificationPeriod']['endDate'])
-    accelerator = DEFAULT_ACCELERATION if SANDBOX_MODE else 1
-    self.assertEqual(endDate - startDate, RECTIFICATION_PERIOD_DURATION/accelerator)
-    self.assertEqual(response.json['data']['next_check'], response.json['data']['rectificationPeriod']['endDate'])
-
-    response = self.app.get('/{}'.format(lot['id']))
-    lot = response.json['data']
-
-    # Check if chronograph come earlier than next_check
-    self.app.authorization = ('Basic', ('chronograph', ''))
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': {'status': 'active.salable'}})
-    self.assertNotEqual(response.json['data']['status'], 'active.salable')
-    self.assertEqual(lot['status'], response.json['data']['status'])
-
-    # Check if auctionPeriod.StartDate is not in two days after rectificationPeriod.endDate
-    self.app.authorization = ('Basic', ('broker', ''))
-    response = self.app.get('/{}/auctions'.format(lot['id']))
-    auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
-    english = auctions[0]
-    response = self.app.patch_json(
-        '/{}/auctions/{}'.format(lot['id'], english['id']),
-        headers=access_header, params={
-            'data': {'auctionPeriod': {'startDate': get_now().isoformat()}}
-            },
-        status=422
-    )
-    self.assertEqual(response.status, '422 Unprocessable Entity')
-    self.assertEqual(response.content_type, 'application/json')
-    self.assertEqual(
-        response.json['errors'][0]['description'][0],
-        'startDate of auctionPeriod must be '
-        'at least in {} days after endDate of rectificationPeriod'.format(DAYS_AFTER_RECTIFICATION_PERIOD.days)
-    )
-
-    rectificationPeriod = Period()
-    rectificationPeriod.startDate = get_now() - timedelta(3)
-    rectificationPeriod.endDate = calculate_business_date(rectificationPeriod.startDate,
-                                                          timedelta(1),
-                                                          None)
-
-    response = create_single_lot(self, self.initial_data)
-    lot = response.json['data']
-    token = response.json['access']['token']
-    access_header = {'X-Access-Token': str(token)}
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.json['data']['id'], lot['id'])
-
-    # Change rectification period in db
-    add_auctions(self, lot, access_header)
-    fromdb = self.db.get(lot['id'])
-    fromdb = self.lot_model(fromdb)
-
-    fromdb.status = 'pending'
-    fromdb.decisions = [
-        {
-            'decisionDate': get_now().isoformat(),
-            'decisionID': 'decisionAssetID'
-        },
-        {
-            'decisionDate': get_now().isoformat(),
-            'decisionID': 'decisionAssetID'
-        }
-    ]
-    fromdb.title = 'title'
-    fromdb.rectificationPeriod = rectificationPeriod
-    fromdb = fromdb.store(self.db)
-    lot = fromdb
-    self.assertEqual(fromdb.id, lot['id'])
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.json['data']['id'], lot['id'])
-
-    self.app.authorization = ('Basic', ('broker', ''))
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': {'title': 'PATCHED'}})
-    self.assertNotEqual(response.json['data']['title'], 'PATCHED')
-    self.assertEqual(lot['title'], response.json['data']['title'])
-
-    add_cancellationDetails_document(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.deleted', access_header)
-
-
-    # Check chronograph action
-    self.app.authorization = ('Basic', ('broker', ''))
-
-    response = create_single_lot(self, self.initial_data)
-    lot = response.json['data']
-    token = response.json['access']['token']
-    access_header = {'X-Access-Token': str(token)}
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.json['data']['id'], lot['id'])
-
-    # Change rectification period in db
-    add_auctions(self, lot, access_header)
-    fromdb = self.db.get(lot['id'])
-    fromdb = self.lot_model(fromdb)
-
-    fromdb.status = 'pending'
-    fromdb.decisions = [
-        {
-            'decisionDate': get_now().isoformat(),
-            'decisionID': 'decisionAssetID'
-        },
-        {
-            'decisionDate': get_now().isoformat(),
-            'decisionID': 'decisionAssetID'
-        }
-    ]
-    fromdb.title = 'title'
-    fromdb.rectificationPeriod = rectificationPeriod
-    fromdb = fromdb.store(self.db)
-    lot = fromdb
-    self.assertEqual(fromdb.id, lot['id'])
-
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertEqual(response.status, '200 OK')
-    self.assertEqual(response.json['data']['id'], lot['id'])
-
-    self.app.authorization = ('Basic', ('chronograph', ''))
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   params={'data': {'title': ' PATCHED'}})
-    self.assertNotEqual(response.json['data']['title'], 'PATCHED')
-    self.assertEqual(lot['title'], response.json['data']['title'])
-    self.assertEqual(response.json['data']['status'], 'active.salable')
-    self.assertNotIn('next_check', response.json['data'])
-
-
 def dateModified_resource(self):
     response = self.app.get('/')
     self.assertEqual(response.status, '200 OK')
@@ -559,7 +377,7 @@ def simple_patch(self):
 
     self.app.authorization = ('Basic', ('concierge', ''))
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
     self.app.authorization = ('Basic', ('broker', ''))
     patch_data = {
@@ -806,7 +624,7 @@ def change_verification_lot(self):
     # Move from 'verification' to 'pending' status
     self.app.authorization = ('Basic', ('concierge', ''))
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
 
     self.app.authorization = ('Basic', ('broker', ''))
@@ -898,7 +716,7 @@ def change_pending_lot(self):
 
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
     self.app.authorization = ('Basic', ('broker', ''))
 
@@ -939,7 +757,7 @@ def change_pending_lot(self):
     self.app.authorization = ('Basic', ('concierge', ''))
     # Move from 'composing' to 'pending' status
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
 
     # Move from 'pending' to one of 'blacklist' status
@@ -1011,7 +829,7 @@ def change_pending_lot(self):
     # Move from 'verification' to 'pending' status
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
 
     self.app.authorization = ('Basic', ('administrator', ''))
@@ -1056,7 +874,7 @@ def change_deleted_lot(self):
     self.app.authorization = ('Basic', ('concierge', ''))
     # Move from 'composing' to 'pending' status
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
 
     self.app.authorization = ('Basic', ('broker', ''))
@@ -1129,8 +947,6 @@ def change_active_salable_lot(self):
 
     self.app.authorization = ('Basic', ('concierge', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'composing')
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertNotIn('rectificationPeriod', response.json['data'])
 
     self.app.authorization = ('Basic', ('broker', ''))
     json = create_single_lot(self, lot_info, 'active.salable')
@@ -1157,8 +973,6 @@ def change_active_salable_lot(self):
 
     self.app.authorization = ('Basic', ('administrator', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'composing')
-    response = self.app.get('/{}'.format(lot['id']))
-    self.assertNotIn('rectificationPeriod', response.json['data'])
 
 
 def change_active_auction_lot(self):
@@ -1541,7 +1355,7 @@ def change_pending_deleted_lot(self):
 
     self.app.authorization = ('Basic', ('concierge', ''))
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
     self.app.authorization = ('Basic', ('broker', ''))
     add_cancellationDetails_document(self, lot, access_header)
 
@@ -1572,7 +1386,7 @@ def change_pending_deleted_lot(self):
 
     self.app.authorization = ('Basic', ('concierge', ''))
     add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_redemption_item_data]})
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
     self.app.authorization = ('Basic', ('broker', ''))
     add_cancellationDetails_document(self, lot, access_header)
 

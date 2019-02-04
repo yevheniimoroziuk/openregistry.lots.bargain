@@ -10,7 +10,6 @@ from openregistry.lots.core.utils import (
 )
 from openregistry.lots.core.validation import (
     validate_decision_post,
-    validate_decision_after_rectificationPeriod,
     validate_decision_patch_data,
     validate_decision_update_in_not_allowed_status
 )
@@ -20,13 +19,11 @@ from openregistry.lots.redemption.validation import (
 
 post_validators = (
     validate_decision_post,
-    validate_decision_after_rectificationPeriod,
     validate_decision_update_in_not_allowed_status
 )
 patch_validators = (
     validate_decision_patch_data,
     validate_decision_update_in_not_allowed_status,
-    validate_decision_after_rectificationPeriod,
     validate_decision_by_decisionOf,
 )
 

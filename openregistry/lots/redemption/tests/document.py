@@ -21,7 +21,6 @@ from openregistry.lots.redemption.tests.blanks.document_blanks import (
     put_resource_document_json,
     patch_resource_document,
     model_validation,
-    rectificationPeriod_document_workflow
 )
 
 
@@ -39,7 +38,6 @@ class LotDocumentWithDSResourceTest(LotContentWebTest):
     test_07_create_resource_document_json = snitch(create_resource_document_json)
     test_08_put_resource_document_json = snitch(put_resource_document_json)
     test_09_model_validation = snitch(model_validation)
-    test_10_rectificationPeriod_document_workflow = snitch(rectificationPeriod_document_workflow)
 
 
     # status, in which operations with lot documents (adding, updating) are forbidden
