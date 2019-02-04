@@ -694,15 +694,36 @@ def change_pending_lot(self):
     add_decisions(self, lot)
     check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
+    self.app.authorization = ('Basic', ('broker', ''))
+    # Move from 'pending' to 'active.salable' status
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'active.salable', access_header)
+
+    # Create lot in 'draft' status and move it to 'pending'
+    self.app.authorization = ('Basic', ('broker', ''))
+    response = create_single_lot(self, deepcopy(lot_info))
+    token = response.json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+    lot = response.json['data']
+
+    # Move from 'draft' to 'composing' status
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    add_lot_decision(self, lot['id'], access_header)
+    lot = add_lot_related_process(self, lot['id'], access_header)
+    add_auctions(self, lot, access_header)
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
+
+    self.app.authorization = ('Basic', ('concierge', ''))
+    # Move from 'composing' to 'pending' status
+    add_decisions(self, lot)
+    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
 
     # Move from 'pending' to one of 'blacklist' status
+    self.app.authorization = ('Basic', ('broker', ''))
     for status in STATUS_BLACKLIST['pending']['lot_owner']:
         check_patch_status_403(self, '/{}'.format(lot['id']), status, access_header)
 
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-
     # Move from 'pending' to one of 'blacklist' status
+    self.app.authorization = ('Basic', ('concierge', ''))
     for status in STATUS_BLACKLIST['pending']['concierge']:
         check_patch_status_403(self, '/{}'.format(lot['id']), status)
 
