@@ -5,12 +5,12 @@ version = '0.0.1'
 
 entry_points = {
     'openregistry.lots.core.plugins': [
-        'lots.loki = openregistry.lots.redemption.includeme:includeme'
+        'lots.redemption = openregistry.lots.redemption.includeme:includeme'
     ],
     'openregistry.tests': [
-        'lots.loki = openregistry.lots.redemption.tests.main:suite'
+        'lots.redemption = openregistry.lots.redemption.tests.main:suite'
     ],
-    'lots.loki.migration': [
+    'lots.redemption.migration': [
         'main = openregistry.lots.redemption.migration:migrate'
     ]
 }
