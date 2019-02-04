@@ -1,0 +1,180 @@
+PATCH /api/2.5/lots/ea37278d119147d3bad3442da5f4c342?acc_token=2743b3ba5c844b4498ccb51233fc714b HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Content-Length: 36
+Content-Type: application/json
+Host: lb.api-sandbox.registry.ea2.openprocurement.net
+DATA:
+{
+  "data": {
+    "status": "verification"
+  }
+}
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "verification", 
+    "lotID": "UA-LR-DGF-2018-08-21-000002", 
+    "contracts": [
+      {
+        "status": "scheduled", 
+        "type": "yoke", 
+        "id": "8ea3d00b129c48e792e2c7c2339a4870"
+      }
+    ], 
+    "decisions": [
+      {
+        "decisionDate": "2018-08-21T17:17:27.417194+03:00", 
+        "decisionID": "initialDecisionID", 
+        "id": "02658077e8564589a6ee9ad258c7801d", 
+        "decisionOf": "lot"
+      }
+    ], 
+    "lotType": "loki", 
+    "dateModified": "2018-08-21T17:17:27.823632+03:00", 
+    "owner": "broker", 
+    "documents": [
+      {
+        "description": "Перелік та реквізити авторизованих електронних майданчиків (найменування установи банку, її адреса та номери рахунків, відкритих для внесення гарантійного внеску, реєстраційного внеску)", 
+        "title": "Перелік та реквізити авторизованих електронних майданчиків", 
+        "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
+        "documentOf": "lot", 
+        "datePublished": "2018-08-21T17:17:27.485162+03:00", 
+        "documentType": "x_PlatformLegalDetails", 
+        "dateModified": "2018-08-21T17:17:27.485189+03:00", 
+        "id": "abc3a975dcf844deb027d02785a1aff5"
+      }
+    ], 
+    "auctions": [
+      {
+        "status": "scheduled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 300.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "auctionPeriod": {
+          "startDate": "2018-08-29T17:22:26.797647+03:00"
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 3000.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "id": "d61da6b1dcd64c4d83ebdc841190ece3", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 1, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }
+      }, 
+      {
+        "status": "scheduled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 150.44, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "f2da3d4a5020423997f4ea91adf0c74a", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 2, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }, 
+      {
+        "status": "scheduled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 0.0, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.insider", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "80e86d8af7754472b017a05619822cc4", 
+        "auctionParameters": {
+          "type": "insider", 
+          "dutchSteps": 99
+        }, 
+        "tenderAttempts": 3, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }
+    ], 
+    "date": "2018-08-21T17:17:27.823451+03:00", 
+    "relatedProcesses": [
+      {
+        "type": "asset", 
+        "id": "614bbcf886284589a76666f8e7210771", 
+        "relatedProcessID": "2d7b237ee4774feba1fb3092e20ba396"
+      }
+    ], 
+    "id": "ea37278d119147d3bad3442da5f4c342"
+  }
+}
+

@@ -1,0 +1,234 @@
+GET /api/2.5/lots/e9e3038d954349829906804353259fbe HTTP/1.0
+Authorization: Basic Y29uY2llcmdlOg==
+Host: lb.api-sandbox.registry.ea2.openprocurement.net
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "dissolved", 
+    "rectificationPeriod": {
+      "startDate": "2018-08-18T17:17:30.782605+03:00", 
+      "endDate": "2018-08-19T17:17:30.782605+03:00"
+    }, 
+    "lotID": "UA-LR-DGF-2018-08-21-000003", 
+    "description": "Нежитлове приміщення для збереження насіння", 
+    "title": "title", 
+    "contracts": [
+      {
+        "status": "cancelled", 
+        "type": "yoke", 
+        "id": "9b98d84c910b4fdea2a72dc849a21f1c"
+      }
+    ], 
+    "items": [
+      {
+        "registrationDetails": {
+          "status": "unknown"
+        }, 
+        "description": "футляри до державних нагород", 
+        "classification": {
+          "scheme": "CPV", 
+          "description": "Description", 
+          "id": "73110000-6"
+        }, 
+        "additionalClassifications": [
+          {
+            "scheme": "UA-EDR", 
+            "description": "папір і картон гофровані, паперова й картонна тара", 
+            "id": "111111-4"
+          }
+        ], 
+        "address": {
+          "countryName": "Ukraine"
+        }, 
+        "id": "0", 
+        "unit": {
+          "code": "code"
+        }, 
+        "quantity": 5.0001
+      }
+    ], 
+    "lotType": "loki", 
+    "lotHolder": {
+      "identifier": {
+        "scheme": "AE-ADCD", 
+        "id": "11111-4"
+      }, 
+      "name": "Власник лоту"
+    }, 
+    "decisions": [
+      {
+        "decisionDate": "2018-08-21T17:17:30.800691+03:00", 
+        "decisionID": "decisionAssetID", 
+        "id": "53deb689ba3a41fbb28e0b72bb491fc3", 
+        "decisionOf": "lot"
+      }, 
+      {
+        "decisionDate": "2018-08-21T17:17:30.800720+03:00", 
+        "decisionID": "decisionAssetID", 
+        "id": "81befcbd3a4844baad9391e64bc1f20b", 
+        "decisionOf": "lot"
+      }
+    ], 
+    "dateModified": "2018-08-21T17:17:31.461394+03:00", 
+    "owner": "broker", 
+    "lotCustodian": {
+      "contactPoint": {
+        "name": "Сергій", 
+        "email": "segiy@mail.com"
+      }, 
+      "identifier": {
+        "scheme": "AE-ADCD", 
+        "id": "11111-4"
+      }, 
+      "name": "Зберігач лоту", 
+      "address": {
+        "countryName": "Україна"
+      }
+    }, 
+    "auctions": [
+      {
+        "status": "cancelled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 300.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "auctionPeriod": {
+          "startDate": "2018-08-29T17:22:26.797647+03:00"
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 3000.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "id": "b313b3ec74e24599be90058df3ad3f59", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 1, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }
+      }, 
+      {
+        "status": "cancelled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 150.44, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "1bc5242088eb44a5bc8bafd1117aefdd", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 2, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }, 
+      {
+        "status": "cancelled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 0.0, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.insider", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "fbeb1ec5cadd4590a8607ed1c4583cce", 
+        "auctionParameters": {
+          "type": "insider", 
+          "dutchSteps": 99
+        }, 
+        "tenderAttempts": 3, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }
+    ], 
+    "date": "2018-08-21T17:17:31.461207+03:00", 
+    "documents": [
+      {
+        "description": "Перелік та реквізити авторизованих електронних майданчиків (найменування установи банку, її адреса та номери рахунків, відкритих для внесення гарантійного внеску, реєстраційного внеску)", 
+        "title": "Перелік та реквізити авторизованих електронних майданчиків", 
+        "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
+        "documentOf": "lot", 
+        "datePublished": "2018-08-21T17:17:30.140673+03:00", 
+        "documentType": "x_PlatformLegalDetails", 
+        "dateModified": "2018-08-21T17:17:30.140701+03:00", 
+        "id": "f820515674164654994e518c9b6ca24b"
+      }
+    ], 
+    "relatedProcesses": [
+      {
+        "identifier": "UA-AR-P-2018-08-17-000002-1", 
+        "type": "asset", 
+        "id": "46701ef2c0444d56bf92e1f95be160c7", 
+        "relatedProcessID": "15c02e069a0b42da8e0de2cc307a234b"
+      }
+    ], 
+    "id": "e9e3038d954349829906804353259fbe"
+  }
+}
+

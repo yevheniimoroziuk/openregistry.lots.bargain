@@ -1,0 +1,211 @@
+GET /api/2.5/lots/040cb2ec4a784abfa902a73171fbbe12 HTTP/1.0
+Authorization: Basic Y29uY2llcmdlOg==
+Host: lb.api-sandbox.registry.ea2.openprocurement.net
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "sold", 
+    "rectificationPeriod": {
+      "startDate": "2018-08-18T17:17:32.095102+03:00", 
+      "endDate": "2018-08-19T17:17:32.095102+03:00"
+    }, 
+    "lotID": "UA-LR-DGF-2018-08-21-000004", 
+    "title": "title", 
+    "contracts": [
+      {
+        "status": "complete", 
+        "type": "yoke", 
+        "id": "d9d7944103fa4b47925aa21daec31976"
+      }
+    ], 
+    "items": [
+      {
+        "registrationDetails": {
+          "status": "unknown"
+        }, 
+        "description": "футляри до державних нагород", 
+        "classification": {
+          "scheme": "CPV", 
+          "description": "Description", 
+          "id": "73110000-6"
+        }, 
+        "additionalClassifications": [
+          {
+            "scheme": "UA-EDR", 
+            "description": "папір і картон гофровані, паперова й картонна тара", 
+            "id": "111111-4"
+          }
+        ], 
+        "address": {
+          "countryName": "Ukraine"
+        }, 
+        "id": "0", 
+        "unit": {
+          "code": "code"
+        }, 
+        "quantity": 5.0001
+      }
+    ], 
+    "lotType": "loki", 
+    "decisions": [
+      {
+        "decisionDate": "2018-08-21T17:17:32.111483+03:00", 
+        "decisionID": "decisionAssetID", 
+        "id": "64b6eba3dcf04304bcc8806eb615bed8", 
+        "decisionOf": "lot"
+      }, 
+      {
+        "decisionDate": "2018-08-21T17:17:32.111502+03:00", 
+        "decisionID": "decisionAssetID", 
+        "id": "63c6edfa4ced4f7dbe5bb66335cf9e8c", 
+        "decisionOf": "lot"
+      }
+    ], 
+    "dateModified": "2018-08-21T17:17:32.591173+03:00", 
+    "owner": "broker", 
+    "documents": [
+      {
+        "description": "Перелік та реквізити авторизованих електронних майданчиків (найменування установи банку, її адреса та номери рахунків, відкритих для внесення гарантійного внеску, реєстраційного внеску)", 
+        "title": "Перелік та реквізити авторизованих електронних майданчиків", 
+        "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
+        "documentOf": "lot", 
+        "datePublished": "2018-08-21T17:17:31.559341+03:00", 
+        "documentType": "x_PlatformLegalDetails", 
+        "dateModified": "2018-08-21T17:17:31.559361+03:00", 
+        "id": "d9f25cdb41f8469da01f29989e93ece1"
+      }
+    ], 
+    "auctions": [
+      {
+        "status": "complete", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 300.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "auctionPeriod": {
+          "startDate": "2018-08-29T17:22:26.797647+03:00"
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 3000.87, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "id": "ab5c881c78b144288a2a474b9f243d81", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 1, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }
+      }, 
+      {
+        "status": "cancelled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 150.44, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.english", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "d65bb32996a342c0b315d02620e867e0", 
+        "auctionParameters": {
+          "type": "english"
+        }, 
+        "tenderAttempts": 2, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }, 
+      {
+        "status": "cancelled", 
+        "bankAccount": {
+          "accountIdentification": [
+            {
+              "scheme": "accountNumber", 
+              "id": "111111-8", 
+              "description": "some description"
+            }
+          ], 
+          "bankName": "name of bank"
+        }, 
+        "minimalStep": {
+          "currency": "UAH", 
+          "amount": 0.0, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "registrationFee": {
+          "currency": "UAH", 
+          "amount": 700.87
+        }, 
+        "procurementMethodType": "sellout.insider", 
+        "value": {
+          "currency": "UAH", 
+          "amount": 1500.43, 
+          "valueAddedTaxIncluded": true
+        }, 
+        "tenderingDuration": "P25DT12H", 
+        "id": "563cc466b652447d9aece93d0f7e0cb2", 
+        "auctionParameters": {
+          "type": "insider", 
+          "dutchSteps": 99
+        }, 
+        "tenderAttempts": 3, 
+        "guarantee": {
+          "currency": "UAH", 
+          "amount": 350.44
+        }
+      }
+    ], 
+    "date": "2018-08-21T17:17:32.590980+03:00", 
+    "relatedProcesses": [
+      {
+        "type": "asset", 
+        "id": "b393882bd1ca41ec8223224701b62b4b", 
+        "relatedProcessID": "1518815ca01e404da3aef9bb606d80d2"
+      }
+    ], 
+    "id": "040cb2ec4a784abfa902a73171fbbe12"
+  }
+}
+

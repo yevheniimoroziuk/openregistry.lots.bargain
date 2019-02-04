@@ -1,0 +1,89 @@
+PATCH /api/2.5/lots/ea37278d119147d3bad3442da5f4c342/auctions/d61da6b1dcd64c4d83ebdc841190ece3 HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Content-Length: 507
+Content-Type: application/json
+Host: lb.api-sandbox.registry.ea2.openprocurement.net
+X-Access-Token: 2743b3ba5c844b4498ccb51233fc714b
+DATA:
+{
+  "data": {
+    "bankAccount": {
+      "accountIdentification": [
+        {
+          "scheme": "accountNumber", 
+          "id": "111111-8", 
+          "description": "some description"
+        }
+      ], 
+      "bankName": "name of bank"
+    }, 
+    "minimalStep": {
+      "currency": "UAH", 
+      "amount": 300.87, 
+      "valueAddedTaxIncluded": true
+    }, 
+    "auctionPeriod": {
+      "startDate": "2018-08-29T17:22:26.797647+03:00"
+    }, 
+    "registrationFee": {
+      "currency": "UAH", 
+      "amount": 700.87
+    }, 
+    "value": {
+      "currency": "UAH", 
+      "amount": 3000.87, 
+      "valueAddedTaxIncluded": true
+    }, 
+    "guarantee": {
+      "currency": "UAH", 
+      "amount": 700.87
+    }
+  }
+}
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "scheduled", 
+    "bankAccount": {
+      "accountIdentification": [
+        {
+          "scheme": "accountNumber", 
+          "id": "111111-8", 
+          "description": "some description"
+        }
+      ], 
+      "bankName": "name of bank"
+    }, 
+    "minimalStep": {
+      "currency": "UAH", 
+      "amount": 300.87, 
+      "valueAddedTaxIncluded": true
+    }, 
+    "auctionPeriod": {
+      "startDate": "2018-08-29T17:22:26.797647+03:00"
+    }, 
+    "registrationFee": {
+      "currency": "UAH", 
+      "amount": 700.87
+    }, 
+    "procurementMethodType": "sellout.english", 
+    "value": {
+      "currency": "UAH", 
+      "amount": 3000.87, 
+      "valueAddedTaxIncluded": true
+    }, 
+    "id": "d61da6b1dcd64c4d83ebdc841190ece3", 
+    "auctionParameters": {
+      "type": "english"
+    }, 
+    "tenderAttempts": 1, 
+    "guarantee": {
+      "currency": "UAH", 
+      "amount": 700.87
+    }
+  }
+}
+
