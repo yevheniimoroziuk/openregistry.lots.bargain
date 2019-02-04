@@ -137,9 +137,7 @@ def get_fields_errors(required_fields, auction):
 
 
 def get_auction_validation_result(lot):
-    auctions = sorted(lot.auctions, key=lambda a: a.tenderAttempts)
-    english = auctions[0]
-    second_english = auctions[1]
+    english = lot.auctions[0]
 
     auction_error_message = {
         'location': 'body',
@@ -148,12 +146,8 @@ def get_auction_validation_result(lot):
     }
 
     # Get errors from first auction
-    required_fields = ['value', 'minimalStep', 'auctionPeriod', 'guarantee', 'bankAccount']
+    required_fields = ['value', 'guarantee', 'bankAccount']
     auction_error_message['description'].extend(get_fields_errors(required_fields, english))
-
-    # Get errors from second auction
-    required_fields = ['tenderingDuration']
-    auction_error_message['description'].extend(get_fields_errors(required_fields, second_english))
 
     return auction_error_message
 
@@ -170,8 +164,6 @@ def validate_verification_status(request, error_handler):
 
         # Auction validation
         lot = request.validated['lot']
-        auctions = sorted(lot.auctions, key=lambda a: a.tenderAttempts)
-        english = auctions[0]
 
         auction_error_message = get_auction_validation_result(lot)
 
