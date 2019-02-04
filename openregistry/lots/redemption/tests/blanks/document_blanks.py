@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
-from datetime import datetime, timedelta
-
-from openregistry.lots.core.constants import TZ
-from openregistry.lots.core.models import Period
-from openregistry.lots.core.utils import get_now, calculate_business_date
-
-from openregistry.lots.redemption.tests.base import add_auctions
-from openregistry.lots.redemption.models import Lot
 
 
 def create_resource_document_json(self):

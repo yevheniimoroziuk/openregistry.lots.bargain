@@ -1,17 +1,7 @@
  # -*- coding: utf-8 -*-
-import unittest
-
 from copy import deepcopy
-from uuid import uuid4
-from datetime import timedelta
-from isodate import parse_datetime
 
-from openregistry.lots.core.utils import get_now, calculate_business_date
-from openregistry.lots.core.models import Period
 from openregistry.lots.core.tests.base import create_blacklist
-from openregistry.lots.core.constants import (
-    SANDBOX_MODE,
-)
 
 from openregistry.lots.redemption.models import Lot
 from openregistry.lots.redemption.tests.json_data import (
@@ -21,7 +11,8 @@ from openregistry.lots.redemption.tests.json_data import (
 from openregistry.lots.redemption.constants import (
     STATUS_CHANGES,
     LOT_STATUSES,
-    PLATFORM_LEGAL_DETAILS_DOC_DATA
+    PLATFORM_LEGAL_DETAILS_DOC_DATA,
+    DEFAULT_PROCUREMENT_TYPE
 )
 from openregistry.lots.redemption.tests.base import (
     create_single_lot,
@@ -30,9 +21,9 @@ from openregistry.lots.redemption.tests.base import (
     add_decisions,
     add_auctions,
     add_lot_decision,
-    DEFAULT_ACCELERATION,
     add_lot_related_process
 )
+
 
 ROLES = ['lot_owner', 'Administrator', 'concierge', 'convoy', 'chronograph']
 STATUS_BLACKLIST = create_blacklist(STATUS_CHANGES, LOT_STATUSES, ROLES)
@@ -97,7 +88,7 @@ def auction_autocreation(self):
     self.assertEqual(len(response.json['data']['auctions']), 1)
     auction = response.json['data']['auctions'][0]
 
-    self.assertEqual(auction['procurementMethodType'], 'procedure.name')
+    self.assertEqual(auction['procurementMethodType'], DEFAULT_PROCUREMENT_TYPE)
     self.assertEqual(auction['status'], 'scheduled')
 
 

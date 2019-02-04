@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
 from copy import deepcopy
 from uuid import uuid4
 
-from openregistry.lots.core.utils import (
-    get_now,
-    calculate_business_date
-)
-from openregistry.lots.core.models import Period
-from openregistry.lots.redemption.models import Lot
 from openregistry.lots.redemption.tests.json_data import test_loki_item_data
 from openregistry.lots.redemption.tests.base import (
     add_decisions,

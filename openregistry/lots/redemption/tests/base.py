@@ -16,8 +16,7 @@ from openregistry.lots.core.tests.base import (
 )
 from openregistry.lots.redemption.tests.json_data import (
     test_redemption_lot_data,
-    auction_common,
-    test_loki_item_data
+    auction_common
 )
 
 DEFAULT_ACCELERATION = 1440

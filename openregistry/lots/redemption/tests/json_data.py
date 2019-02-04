@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
-from datetime import timedelta
 
-from openregistry.lots.core.utils import get_now, calculate_business_date
+from openregistry.lots.core.utils import get_now
 
 from openregistry.lots.core.tests.blanks.json_data import (
     test_document_data,

@@ -17,14 +17,15 @@ from openregistry.lots.core.utils import (
 from openregistry.lots.redemption.utils import (
     process_lot_status_change
 )
-from .constants import (
+from openregistry.lots.redemption.constants import (
     STATUS_CHANGES,
     ITEM_EDITING_STATUSES,
     DECISION_EDITING_STATUSES,
     CONTRACT_TYPE,
-    PLATFORM_LEGAL_DETAILS_DOC_DATA
+    PLATFORM_LEGAL_DETAILS_DOC_DATA,
+    DEFAULT_PROCUREMENT_TYPE
 )
-from .validation import (
+from openregistry.lots.redemption.validation import (
     validate_pending_status,
     validate_deleted_status,
     validate_verification_status,
@@ -89,7 +90,7 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
     def _create_auctions(self, request):
         lot = request.validated['lot']
         lot.date = get_now()
-        auction_types = ['procedure.name']
+        auction_types = [DEFAULT_PROCUREMENT_TYPE]
         auction_class = lot.__class__.auctions.model_class
 
         for auction_type in auction_types:

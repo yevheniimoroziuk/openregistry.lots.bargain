@@ -10,6 +10,8 @@ from openregistry.lots.core.models import (
     lots_embedded_role
 )
 
+from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
+
 
 item_create_role = blacklist('id')
 item_edit_role = blacklist('id')
@@ -28,14 +30,14 @@ auction_common_edit_role = blacklist(
     'status', 'relatedProcessID'
 )
 auction_view_role = (schematics_default_role + blacklist())
-edit_first_english = auction_common_edit_role
+edit_auction = auction_common_edit_role
 
 
 auction_roles = {
     'create': auction_create_role,
     'edit': auction_common_edit_role,
     'view': auction_view_role,
-    'edit_procedure.name': edit_first_english,
+    'edit_{}'.format(DEFAULT_PROCUREMENT_TYPE): edit_auction,
     'convoy': whitelist('status'),
     'concierge': whitelist('status', 'auctionID', 'relatedProcessID')
 }

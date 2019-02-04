@@ -3,9 +3,10 @@ import unittest
 
 from copy import deepcopy
 
-from openregistry.lots.core.constants import SANDBOX_MODE, TZ
+from openregistry.lots.core.constants import SANDBOX_MODE
 
 
+from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
 from openregistry.lots.redemption.tests.json_data import test_loki_item_data
 from openregistry.lots.redemption.tests.base import (
     create_single_lot,
@@ -105,7 +106,7 @@ def patch_auction(self):
     response = self.app.get('/{}/auctions'.format(self.resource_id))
     auction = response.json['data'][0]
 
-    self.assertEqual(auction['procurementMethodType'], 'procedure.name')
+    self.assertEqual(auction['procurementMethodType'], DEFAULT_PROCUREMENT_TYPE)
     self.assertEqual(auction['value']['amount'], data['value']['amount'])
     self.assertEqual(auction['guarantee']['amount'], data['guarantee']['amount'])
 

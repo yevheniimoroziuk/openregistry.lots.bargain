@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import unittest
-import mock
-
-from datetime import timedelta
 
 from schematics.exceptions import ModelValidationError
 
 from openregistry.lots.core.utils import get_now
 
+from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
 from openregistry.lots.redemption.models import (
     BankAccount,
     Auction,
@@ -71,7 +69,7 @@ class DummyModelsTest(unittest.TestCase):
 
     def test_Auction(self):
         data = {
-            "procurementMethodType": "procedure.name",
+            "procurementMethodType": DEFAULT_PROCUREMENT_TYPE,
             "guarantee": {
                 "amount": 30.54,
                 "currency": "UAH"

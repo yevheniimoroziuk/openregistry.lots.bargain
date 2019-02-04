@@ -37,6 +37,7 @@ from openregistry.lots.redemption.constants import (
     CONTRACT_STATUSES,
     LOT_DOCUMENT_TYPES,
     CURRENCY_CHOICES,
+    DEFAULT_PROCUREMENT_TYPE
 )
 from openregistry.lots.redemption.roles import (
     lot_roles,
@@ -85,7 +86,7 @@ class Auction(Model):
     auctionID = StringType()
     relatedProcessID = StringType()
     status = StringType(choices=AUCTION_STATUSES)
-    procurementMethodType = StringType(choices=['procedure.name'])
+    procurementMethodType = StringType(choices=[DEFAULT_PROCUREMENT_TYPE])
     value = ModelType(RedemptionValue)
     guarantee = ModelType(RedemptionGuarantee)
     bankAccount = ModelType(BankAccount)

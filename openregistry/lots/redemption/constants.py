@@ -122,3 +122,5 @@ DECISION_EDITING_STATUSES = ['pending', 'composing']
 CURRENCY_CHOICES = ['UAH']
 DEFAULT_LEVEL_OF_ACCREDITATION = {'create': [1],
                                   'edit': [2]}
+
+DEFAULT_PROCUREMENT_TYPE = 'procedure.name'
