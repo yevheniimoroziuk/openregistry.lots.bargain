@@ -14,14 +14,29 @@ from openregistry.lots.redemption.constants import (
     PLATFORM_LEGAL_DETAILS_DOC_DATA,
     DEFAULT_PROCUREMENT_TYPE
 )
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.redemption.tests.fixtures import (
     create_single_lot,
     check_patch_status_200,
     check_patch_status_403,
     add_decisions,
     add_auctions,
     add_lot_decision,
-    add_lot_related_process
+    add_lot_related_process,
+    add_cancellationDetails_document,
+    # status fixtures
+    move_lot_to_composing,
+    move_lot_to_verification,
+    move_lot_to_pending,
+    move_lot_to_active_auction,
+    move_lot_to_active_contracting,
+    move_lot_to_active_salable,
+    move_lot_to_pending_sold,
+    move_lot_to_sold,
+    move_lot_to_deleted,
+    move_lot_to_dissolved,
+    move_lot_to_invalid,
+    move_lot_to_pending_deleted,
+    move_lot_to_pending_dissolution
 )
 
 
@@ -48,36 +63,6 @@ def simple_add_lot(self):
     assert u.doc_type == "Lot"
 
     u.delete_instance(self.db)
-
-
-def add_cancellationDetails_document(self, lot, access_header):
-    # Add cancellationDetails document
-    test_document_data = {
-        # 'url': self.generate_docservice_url(),
-        'title': u'укр.doc',
-        'hash': 'md5:' + '0' * 32,
-        'format': 'application/msword',
-        'documentType': 'cancellationDetails'
-    }
-    test_document_data['url'] = self.generate_docservice_url()
-
-    response = self.app.post_json('/{}/documents'.format(lot['id']),
-                                  headers=access_header,
-                                  params={'data': test_document_data})
-    self.assertEqual(response.status, '201 Created')
-    self.assertEqual(response.content_type, 'application/json')
-    doc_id = response.json["data"]['id']
-    self.assertIn(doc_id, response.headers['Location'])
-    self.assertEqual(u'укр.doc', response.json["data"]["title"])
-    self.assertIn('Signature=', response.json["data"]["url"])
-    self.assertIn('KeyID=', response.json["data"]["url"])
-    self.assertNotIn('Expires=', response.json["data"]["url"])
-    key = response.json["data"]["url"].split('/')[-1].split('?')[0]
-    tender = self.db.get(lot['id'])
-    self.assertIn(key, tender['documents'][-1]["url"])
-    self.assertIn('Signature=', tender['documents'][-1]["url"])
-    self.assertIn('KeyID=', tender['documents'][-1]["url"])
-    self.assertNotIn('Expires=', tender['documents'][-1]["url"])
 
 
 def auction_autocreation(self):
@@ -116,7 +101,7 @@ def check_change_to_verification(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'draft', access_header)
 
     # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    move_lot_to_composing(self, lot, access_header)
     lot = add_lot_decision(self, lot['id'], access_header)
 
     response = self.app.patch_json(
@@ -234,7 +219,7 @@ def check_change_to_verification(self):
     token = response.json['access']['token']
     access_header = {'X-Access-Token': str(token)}
 
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    move_lot_to_composing(self, lot, access_header)
     add_auctions(self, lot, access_header)
     add_lot_decision(self, lot['id'], access_header)
     response = self.app.patch_json(
@@ -445,11 +430,7 @@ def change_composing_lot(self):
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data'], lot)
 
-    # Move from 'draft' to 'draft' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'draft', access_header)
-
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    move_lot_to_composing(self, lot, access_header)
 
     # Move from 'verification' to 'composing' status
     add_lot_decision(self, lot['id'], access_header)
@@ -466,7 +447,7 @@ def change_composing_lot(self):
     self.assertEqual(lot['status'], 'draft')
 
     # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    move_lot_to_composing(self, lot, access_header)
 
     # Move from 'composing' to one of 'blacklist' status
     for status in STATUS_BLACKLIST['composing']['lot_owner']:
@@ -483,17 +464,11 @@ def change_composing_lot(self):
         check_patch_status_403(self, '/{}'.format(lot['id']), status)
 
 
-    self.app.authorization = ('Basic', ('administrator', ''))
-
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-
 
     self.app.authorization = ('Basic', ('broker', ''))
     add_lot_decision(self, lot['id'], access_header)
     lot = add_lot_related_process(self, lot['id'], access_header)
     add_auctions(self, lot, access_header)
-
 
     self.app.authorization = ('Basic', ('administrator', ''))
     # Move from 'verification' to 'composing' status
@@ -509,7 +484,7 @@ def change_composing_lot(self):
     self.assertEqual(lot['status'], 'draft')
 
     # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
+    move_lot_to_composing(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('administrator', ''))
     for status in STATUS_BLACKLIST['composing']['Administrator']:
@@ -536,17 +511,7 @@ def change_verification_lot(self):
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data'], lot)
 
-    # Move from 'draft' to 'draft' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'draft', access_header)
-
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-
-    # Move from 'composing' to 'verification' status
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
+    lot = move_lot_to_verification(self, lot, access_header)
 
     # Move from 'verification' to one of 'blacklist' status
     for status in STATUS_BLACKLIST['verification']['lot_owner']:
@@ -567,11 +532,8 @@ def change_verification_lot(self):
     lot = response.json['data']
     token = response.json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
+
+    lot = move_lot_to_verification(self, lot, access_header)
 
     # Move from 'verification' to 'invalid' status
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -583,11 +545,8 @@ def change_verification_lot(self):
     lot = response.json['data']
     token = response.json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
+
+    lot = move_lot_to_verification(self, lot, access_header)
 
     # Move from 'verification' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -605,11 +564,8 @@ def change_verification_lot(self):
     lot = response.json['data']
     token = response.json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_auctions(self, lot, access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    add_lot_related_process(self, lot['id'], access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
+
+    lot = move_lot_to_verification(self, lot, access_header)
 
     # Move from 'verification' to 'composing' status
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -640,18 +596,7 @@ def change_pending_lot(self):
     self.assertEqual(response.json['data'], lot)
 
     # Move from 'draft' to 'pending' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
-
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
+    move_lot_to_pending(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
 
@@ -682,17 +627,7 @@ def change_pending_lot(self):
     access_header = {'X-Access-Token': str(token)}
     lot = response.json['data']
 
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    # Move from 'composing' to 'pending' status
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
+    move_lot_to_pending(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
     # Move from 'pending' to 'active.salable' status
@@ -705,17 +640,7 @@ def change_pending_lot(self):
     access_header = {'X-Access-Token': str(token)}
     lot = response.json['data']
 
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    # Move from 'composing' to 'pending' status
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
+    move_lot_to_pending(self, lot, access_header)
 
     # Move from 'pending' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -766,19 +691,7 @@ def change_pending_lot(self):
     access_header = {'X-Access-Token': str(token)}
     lot = response.json['data']
 
-    # Move from 'draft' to 'composing' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    # Move from 'verification' to 'pending' status
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
-
+    move_lot_to_pending(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('administrator', ''))
 
@@ -810,29 +723,7 @@ def change_deleted_lot(self):
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data'], lot)
 
-
-    # Move from 'draft' to 'composing'
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'composing', access_header)
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    add_auctions(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
-
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    # Move from 'composing' to 'pending' status
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
-
-
-    self.app.authorization = ('Basic', ('broker', ''))
-
-    # Move from 'pending' to 'deleted'
-    add_cancellationDetails_document(self, lot, access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.deleted', access_header)
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'deleted', access_header)
+    move_lot_to_deleted(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
     # Move from 'deleted' to one of 'blacklist' status
@@ -868,11 +759,12 @@ def change_active_salable_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'active.salable' status
-    json = create_single_lot(self, lot_info, 'active.salable')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'active.salable')
+
+    move_lot_to_active_salable(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
 
@@ -889,17 +781,23 @@ def change_active_salable_lot(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'active.auction')
 
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.salable')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.salable')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_active_salable(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('concierge', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'composing')
 
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.salable')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.salable')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_active_salable(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('chronograph', ''))
     for status in STATUS_BLACKLIST['active.salable']['chronograph']:
@@ -915,9 +813,12 @@ def change_active_salable_lot(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'active.auction')
 
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.salable')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.salable')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_active_salable(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('administrator', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'composing')
@@ -934,11 +835,12 @@ def change_active_auction_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'active.auction' status
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'active.auction')
+
+    move_lot_to_active_auction(self, lot, access_header)
 
     # Move from 'active.auction' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -960,11 +862,12 @@ def change_active_auction_lot(self):
 
     # Create new lot in 'active.auction' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'active.auction')
+
+    move_lot_to_active_auction(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('administrator', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.dissolution')
@@ -972,10 +875,12 @@ def change_active_auction_lot(self):
 
     # Create new lot in 'active.auction' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'active.auction')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_active_auction(self, lot, access_header)
 
 
     # Move from 'active.auction' to one of 'blacklist' status
@@ -995,11 +900,12 @@ def change_active_contracting_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'active.contracting' status
-    json = create_single_lot(self, lot_info, 'active.contracting')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'active.contracting')
+
+    move_lot_to_active_contracting(self, lot, access_header)
 
     # Move from 'active.contracting' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -1021,11 +927,12 @@ def change_active_contracting_lot(self):
 
     # Create new lot in 'active.contracting' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.contracting')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'active.contracting')
+
+    move_lot_to_active_contracting(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('administrator', ''))
     check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.dissolution')
@@ -1033,10 +940,12 @@ def change_active_contracting_lot(self):
 
     # Create new lot in 'active.contracting' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.contracting')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'active.contracting')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_active_contracting(self, lot, access_header)
 
 
     # Move from 'active.contracting' to one of 'blacklist' status
@@ -1056,11 +965,13 @@ def change_pending_sold_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'pending.sold' status
-    json = create_single_lot(self, lot_info, 'pending.sold')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'pending.sold')
+
+    move_lot_to_pending_sold(self, lot, access_header)
+
 
     # Move from 'pending.sold' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -1073,10 +984,12 @@ def change_pending_sold_lot(self):
 
     # Create new lot in 'pending.sold' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'pending.sold')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'pending.sold')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_pending_sold(self, lot, access_header)
 
 
     # Move from 'pending.sold' to one of 'blacklist' status
@@ -1093,14 +1006,6 @@ def change_pending_sold_lot(self):
     check_patch_status_200(self, '/{}'.format(lot['id']), 'sold')
 
 
-    # Create new lot in 'pending.sold' status
-    self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'pending.sold')
-    lot = json['data']
-    token = json['access']['token']
-    self.assertEqual(lot['status'], 'pending.sold')
-
-
 def change_pending_dissolution_lot(self):
     response = self.app.get('/')
     self.assertEqual(response.status, '200 OK')
@@ -1112,11 +1017,12 @@ def change_pending_dissolution_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'pending.dissolution' status
-    json = create_single_lot(self, lot_info, 'pending.dissolution')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'pending.dissolution')
+
+    move_lot_to_pending_dissolution(self, lot, access_header)
 
     # Move from 'pending.dissolution' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -1130,10 +1036,12 @@ def change_pending_dissolution_lot(self):
 
     # Create new lot in 'pending.dissolution' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'pending.dissolution')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'pending.dissolution')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_pending_dissolution(self, lot, access_header)
 
     # Move from 'pending.dissolution' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -1151,10 +1059,12 @@ def change_pending_dissolution_lot(self):
 
     # Create new lot in 'pending.dissolution' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'pending.dissolution')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'pending.dissolution')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_pending_dissolution(self, lot, access_header)
 
     # Move from 'pending.dissolution' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('administrator', ''))
@@ -1173,11 +1083,12 @@ def change_sold_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'sold' status
-    json = create_single_lot(self, lot_info, 'sold')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'sold')
+
+    move_lot_to_sold(self, lot, access_header)
 
     # Move from 'sold' to one of 'blacklist' status
     for status in STATUS_BLACKLIST['sold']['lot_owner']:
@@ -1212,11 +1123,12 @@ def change_dissolved_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'dissolved' status
-    json = create_single_lot(self, lot_info, 'dissolved')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'dissolved')
+
+    move_lot_to_dissolved(self, lot, access_header)
 
     # Move from 'dissolved' to one of 'blacklist' status
     for status in STATUS_BLACKLIST['dissolved']['lot_owner']:
@@ -1251,12 +1163,13 @@ def change_invalid_lot(self):
 
     lot_info = self.initial_data
 
-    # Create new lot in 'dissolved' status
-    json = create_single_lot(self, lot_info, 'invalid')
+    # Create new lot in 'invalid' status
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    self.assertEqual(lot['status'], 'invalid')
+
+    move_lot_to_invalid(self, lot, access_header)
 
     # Move from 'invalid' to one of 'blacklist' status
     for status in STATUS_BLACKLIST['invalid']['lot_owner']:
@@ -1291,21 +1204,12 @@ def change_pending_deleted_lot(self):
     lot_info = self.initial_data
 
     # Create new lot in 'pending.deleted' status
-    json = create_single_lot(self, lot_info, 'composing')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
 
-    self.app.authorization = ('Basic', ('concierge', ''))
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
-    self.app.authorization = ('Basic', ('broker', ''))
-    add_cancellationDetails_document(self, lot, access_header)
-
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.deleted', access_header)
+    move_lot_to_pending_deleted(self, lot, access_header)
 
     # Move from 'pending.deleted' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('broker', ''))
@@ -1320,21 +1224,12 @@ def change_pending_deleted_lot(self):
 
     # Create new lot in 'pending.deleted' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'composing')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
     access_header = {'X-Access-Token': str(token)}
-    add_lot_decision(self, lot['id'], access_header)
-    lot = add_lot_related_process(self, lot['id'], access_header)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
 
-    self.app.authorization = ('Basic', ('concierge', ''))
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending', extra={'items': [test_loki_item_data]})
-    self.app.authorization = ('Basic', ('broker', ''))
-    add_cancellationDetails_document(self, lot, access_header)
-
-    check_patch_status_200(self, '/{}'.format(lot['id']), 'pending.deleted', access_header)
+    move_lot_to_pending_deleted(self, lot, access_header)
 
     # Move from 'pending.deleted' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -1353,10 +1248,12 @@ def change_pending_deleted_lot(self):
 
     # Create new lot in 'pending.deleted' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'pending.deleted')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     token = json['access']['token']
-    self.assertEqual(lot['status'], 'pending.deleted')
+    access_header = {'X-Access-Token': str(token)}
+
+    move_lot_to_pending_deleted(self, lot, access_header)
 
     # Move from 'pending.deleted' to one of 'blacklist' status
     self.app.authorization = ('Basic', ('administrator', ''))
@@ -1373,9 +1270,13 @@ def check_auction_status_lot_workflow(self):
 
     # Create new lot in 'active.auction' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.auction')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_auction(self, lot, access_header)
+
     auction = lot['auctions'][0]
 
 
@@ -1394,9 +1295,12 @@ def check_auction_status_lot_workflow(self):
 
     # Create new lot in 'active.auction' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.auction')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_auction(self, lot, access_header)
 
     auction = lot['auctions'][0]
 
@@ -1415,9 +1319,13 @@ def check_auction_status_lot_workflow(self):
 
     # Create new lot in 'active.salable' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.salable')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.salable')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_salable(self, lot, access_header)
+
     auction = lot['auctions'][0]
 
     self.app.authorization = ('Basic', ('concierge', ''))
@@ -1430,9 +1338,12 @@ def check_auction_status_lot_workflow(self):
 
     # Create new lot in 'active.auction' status and patch to complete
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.auction')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
-    self.assertEqual(lot['status'], 'active.auction')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_auction(self, lot, access_header)
     auction = lot['auctions'][0]
 
     self.app.authorization = ('Basic', ('convoy', ''))
@@ -1456,10 +1367,14 @@ def check_contract_status_workflow(self):
 
     # Create new lot in 'active.contracting' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.contracting')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     contract_id = lot['contracts'][0]['id']
-    self.assertEqual(lot['status'], 'active.contracting')
+
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_contracting(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('caravan', ''))
     response = self.app.patch_json('/{}/contracts/{}'.format(lot['id'], contract_id),
@@ -1475,10 +1390,13 @@ def check_contract_status_workflow(self):
 
     # Create new lot in 'active.contracting' status
     self.app.authorization = ('Basic', ('broker', ''))
-    json = create_single_lot(self, lot_info, 'active.contracting')
+    json = create_single_lot(self, lot_info).json
     lot = json['data']
     contract_id = lot['contracts'][0]['id']
-    self.assertEqual(lot['status'], 'active.contracting')
+    token = json['access']['token']
+    access_header = {'X-Access-Token': str(token)}
+
+    lot = move_lot_to_active_contracting(self, lot, access_header)
 
     self.app.authorization = ('Basic', ('caravan', ''))
     response = self.app.patch_json('/{}/contracts/{}'.format(lot['id'], contract_id),

@@ -8,22 +8,21 @@ from openregistry.lots.core.constants import SANDBOX_MODE
 
 from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
 from openregistry.lots.redemption.tests.json_data import test_loki_item_data
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.redemption.tests.fixtures import (
     create_single_lot,
     check_patch_status_200,
     add_decisions,
     add_auctions,
     add_lot_decision,
-    add_lot_related_process
+    add_lot_related_process,
+    move_lot_to_pending
 )
 
 
 def patch_auctions_with_lot(self):
     response = self.app.get('/{}'.format(self.resource_id))
     lot = response.json['data']
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
+    move_lot_to_pending(self, lot, self.access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
 
@@ -50,9 +49,7 @@ def patch_auctions_with_lot(self):
 def patch_auction_by_concierge(self):
     response = self.app.get('/{}'.format(self.resource_id))
     lot = response.json['data']
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
+    move_lot_to_pending(self, lot, self.access_header)
 
     data = deepcopy(self.initial_auction_data)
     response = self.app.get('/{}/auctions'.format(self.resource_id))
@@ -115,9 +112,7 @@ def patch_auction(self):
 def procurementMethodDetails_check_with_sandbox(self):
     response = self.app.get('/{}'.format(self.resource_id))
     lot = response.json['data']
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
+    move_lot_to_pending(self, lot, self.access_header)
 
     # Test procurementMethodDetails after creating lot
     response = self.app.get('/{}'.format(self.resource_id))
@@ -147,16 +142,7 @@ def procurementMethodDetails_check_with_sandbox(self):
 def procurementMethodDetails_check_without_sandbox(self):
     response = self.app.get('/{}'.format(self.resource_id))
     lot = response.json['data']
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
-
-    # Test procurementMethodDetails after creating lot
-    response = self.app.get('/{}'.format(self.resource_id))
-    lot = response.json['data']
-    self.set_status('draft')
-    add_auctions(self, lot, access_header=self.access_header)
-    self.set_status('pending')
+    move_lot_to_pending(self, lot, self.access_header)
 
     auction = response.json['data']['auctions'][0]
 

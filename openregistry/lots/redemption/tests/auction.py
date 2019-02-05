@@ -19,6 +19,7 @@ from openregistry.lots.redemption.tests.blanks.auction_blanks import (
 
 class LotAuctionResourceTest(LotContentWebTest):
     initial_auction_data = deepcopy(auction_common)
+    initial_status = 'draft'
 
     test_patch_auctions_with_lot = snitch(patch_auctions_with_lot)
     test_patch_auction_by_concierge = snitch(patch_auction_by_concierge)

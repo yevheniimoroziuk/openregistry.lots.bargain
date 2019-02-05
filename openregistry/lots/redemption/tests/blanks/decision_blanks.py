@@ -4,13 +4,13 @@ from copy import deepcopy
 from openregistry.lots.core.utils import (
     get_now,
 )
-from openregistry.lots.redemption.tests.json_data import test_loki_item_data
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.redemption.tests.fixtures import (
     add_lot_decision,
     add_auctions,
-    add_decisions,
     check_patch_status_200,
-    add_lot_related_process
+    add_lot_related_process,
+    move_lot_to_pending,
+    move_lot_to_verification
 )
 
 
@@ -47,15 +47,7 @@ def patch_decision(self):
     self.initial_status = 'draft'
     self.create_resource()
 
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'composing', self.access_header)
-    add_lot_decision(self, self.resource_id, self.access_header)
-    lot = add_lot_related_process(self, self.resource_id, self.access_header)
-    add_auctions(self, lot, self.access_header)
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'verification', self.access_header)
-
-    self.app.authorization = ('Basic', ('concierge', ''))
-    add_decisions(self, lot)
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'pending', extra={'items': [test_loki_item_data]})
+    move_lot_to_pending(self, {'id': self.resource_id}, self.access_header)
 
     self.app.authorization = ('Basic', ('broker', ''))
     decisions = self.app.get('/{}/decisions'.format(self.resource_id)).json['data']
@@ -102,11 +94,7 @@ def patch_decisions_with_lot_by_concierge(self):
         'decisions': decision_data
     }
 
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'composing', self.access_header)
-    add_lot_decision(self, self.resource_id, self.access_header)
-    lot = add_lot_related_process(self, self.resource_id, self.access_header)
-    add_auctions(self, lot, self.access_header)
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'verification', self.access_header)
+    move_lot_to_verification(self, {'id': self.resource_id}, self.access_header)
 
     self.app.authorization = ('Basic', ('concierge', ''))
     response = self.app.patch_json(
@@ -134,11 +122,7 @@ def create_or_patch_decision_in_not_allowed_status(self):
     self.initial_status = 'draft'
     self.create_resource()
 
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'composing', self.access_header)
-    lot = add_lot_decision(self, self.resource_id, self.access_header)
-    add_lot_related_process(self, self.resource_id, self.access_header)
-    add_auctions(self, lot, self.access_header)
-    check_patch_status_200(self, '/{}'.format(self.resource_id), 'verification', self.access_header)
+    move_lot_to_verification(self, {'id': self.resource_id}, self.access_header)
 
     decision_data = {
         'decisionDate': get_now().isoformat(),
