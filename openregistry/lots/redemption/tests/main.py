@@ -2,7 +2,7 @@
 
 import unittest
 
-from openregistry.lots.redemption.tests import lot, document, item
+from openregistry.lots.bargain.tests import lot, document, item
 
 
 def suite():

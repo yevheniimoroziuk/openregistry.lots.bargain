@@ -4,11 +4,11 @@ from copy import deepcopy
 
 from openregistry.lots.core.tests.base import snitch
 
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     LotContentWebTest
 )
-from openregistry.lots.redemption.tests.json_data import auction_common
-from openregistry.lots.redemption.tests.blanks.auction_blanks import (
+from openregistry.lots.bargain.tests.json_data import auction_common
+from openregistry.lots.bargain.tests.blanks.auction_blanks import (
     patch_auction,
     procurementMethodDetails_check_with_sandbox,
     procurementMethodDetails_check_without_sandbox,

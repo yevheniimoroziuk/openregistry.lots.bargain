@@ -3,18 +3,18 @@ from copy import deepcopy
 
 from openregistry.lots.core.tests.base import create_blacklist
 
-from openregistry.lots.redemption.models import Lot
-from openregistry.lots.redemption.tests.json_data import (
+from openregistry.lots.bargain.models import Lot
+from openregistry.lots.bargain.tests.json_data import (
     auction_common,
     test_loki_item_data
 )
-from openregistry.lots.redemption.constants import (
+from openregistry.lots.bargain.constants import (
     STATUS_CHANGES,
     LOT_STATUSES,
     PLATFORM_LEGAL_DETAILS_DOC_DATA,
     DEFAULT_PROCUREMENT_TYPE
 )
-from openregistry.lots.redemption.tests.fixtures import (
+from openregistry.lots.bargain.tests.fixtures import (
     create_single_lot,
     check_patch_status_200,
     check_patch_status_403,

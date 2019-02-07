@@ -50,7 +50,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'openregistry.lots.redemption'
+project = u'openregistry.lots.bargain'
 copyright = u'2017, Quintagroup, Ltd'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -203,7 +203,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'openregistrylotsloki.tex', u'openregistry.lots.redemption Documentation',
+  ('index', 'openregistrylotsloki.tex', u'openregistry.lots.bargain Documentation',
    u'Myroslav Opyr', 'manual'),
 ]
 
@@ -247,7 +247,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'openregistrylotsloki', u'openregistry.lots.redemption Documentation',
+  ('index', 'openregistrylotsloki', u'openregistry.lots.bargain Documentation',
    u'Myroslav Opyr', 'openregistrylotsbasic', 'One line description of project.',
    'Miscellaneous'),
 ]

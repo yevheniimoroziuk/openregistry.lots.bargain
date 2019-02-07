@@ -4,7 +4,7 @@ from copy import deepcopy
 from openregistry.lots.core.utils import (
     get_now,
 )
-from openregistry.lots.redemption.tests.fixtures import (
+from openregistry.lots.bargain.tests.fixtures import (
     add_lot_decision,
     add_auctions,
     check_patch_status_200,

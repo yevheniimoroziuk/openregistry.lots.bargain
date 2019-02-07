@@ -1,7 +1,7 @@
 Overview
 ========
 
-openregistry.lots.redemption contains the description of the Lots Registry.
+openregistry.lots.bargain contains the description of the Lots Registry.
 
 Features
 --------
@@ -43,7 +43,7 @@ Project status
 The project has pre alpha status.
 
 The source repository for this project is on GitHub: 
-https://github.com/openprocurement/openregistry.lots.redemption
+https://github.com/openprocurement/openregistry.lots.bargain
 
 Documentation of related packages
 ---------------------------------

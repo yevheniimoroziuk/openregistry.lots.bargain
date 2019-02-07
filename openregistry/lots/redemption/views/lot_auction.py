@@ -7,11 +7,11 @@ from openregistry.lots.core.utils import (
 from openregistry.lots.core.utils import (
     oplotsresource, apply_patch, save_lot
 )
-from openregistry.lots.redemption.utils import (
+from openregistry.lots.bargain.utils import (
     process_convoy_auction_report_result,
     process_concierge_auction_status_change
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_auction_data,
     validate_update_auction_in_not_allowed_status
 )
@@ -21,10 +21,10 @@ patch_validators = (
 )
 
 
-@oplotsresource(name='redemption:Lot Auctions',
+@oplotsresource(name='bargain:Lot Auctions',
                 collection_path='/lots/{lot_id}/auctions',
                 path='/lots/{lot_id}/auctions/{auction_id}',
-                _internal_type='redemption',
+                _internal_type='bargain',
                 description="Lot related auctions")
 class LotAuctionResource(APIResource):
 

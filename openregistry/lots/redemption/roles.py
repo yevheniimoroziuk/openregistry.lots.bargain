@@ -10,7 +10,7 @@ from openregistry.lots.core.models import (
     lots_embedded_role
 )
 
-from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
+from openregistry.lots.bargain.constants import DEFAULT_PROCUREMENT_TYPE
 
 
 item_create_role = blacklist('id')

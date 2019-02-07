@@ -4,11 +4,11 @@ from copy import deepcopy
 
 from openregistry.lots.core.tests.base import snitch
 
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     LotContentWebTest
 )
-from openregistry.lots.redemption.tests.json_data import test_lot_contract_data
-from openregistry.lots.redemption.tests.blanks.contract_blanks import (
+from openregistry.lots.bargain.tests.json_data import test_lot_contract_data
+from openregistry.lots.bargain.tests.blanks.contract_blanks import (
     patch_contracts_by_convoy,
     patch_contracts_by_caravan,
     patch_contracts_with_lot

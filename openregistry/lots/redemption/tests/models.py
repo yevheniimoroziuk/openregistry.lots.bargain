@@ -5,8 +5,8 @@ from schematics.exceptions import ModelValidationError
 
 from openregistry.lots.core.utils import get_now
 
-from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
-from openregistry.lots.redemption.models import (
+from openregistry.lots.bargain.constants import DEFAULT_PROCUREMENT_TYPE
+from openregistry.lots.bargain.models import (
     BankAccount,
     Auction,
     Lot

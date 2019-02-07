@@ -14,10 +14,10 @@ from openregistry.lots.core.utils import (
     save_lot,
     validate_with,
 )
-from openregistry.lots.redemption.utils import (
+from openregistry.lots.bargain.utils import (
     process_lot_status_change
 )
-from openregistry.lots.redemption.constants import (
+from openregistry.lots.bargain.constants import (
     STATUS_CHANGES,
     ITEM_EDITING_STATUSES,
     DECISION_EDITING_STATUSES,
@@ -25,7 +25,7 @@ from openregistry.lots.redemption.constants import (
     PLATFORM_LEGAL_DETAILS_DOC_DATA,
     DEFAULT_PROCUREMENT_TYPE
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_pending_status,
     validate_deleted_status,
     validate_verification_status,
@@ -33,10 +33,10 @@ from openregistry.lots.redemption.validation import (
 )
 
 
-class RedemptionLotConfigurator(LotConfigurator):
-    """ Redemption Tender configuration adapter """
+class BargainLotConfigurator(LotConfigurator):
+    """ Bargain Tender configuration adapter """
 
-    name = "Redemption Lot configurator"
+    name = "Bargain Lot configurator"
     available_statuses = STATUS_CHANGES
     item_editing_allowed_statuses = ITEM_EDITING_STATUSES
     decision_editing_allowed_statuses = DECISION_EDITING_STATUSES
@@ -69,8 +69,8 @@ class RelatedProcessManager(Manager):
         return save_lot(request)
 
 
-class RedemptionLotManagerAdapter(LotManagerAdapter):
-    name = 'Redemption Lot Manager'
+class BargainLotManagerAdapter(LotManagerAdapter):
+    name = 'Bargain Lot Manager'
     create_validation = (
         validate_post_lot_role,
     )
@@ -81,7 +81,7 @@ class RedemptionLotManagerAdapter(LotManagerAdapter):
     )
 
     def __init__(self, *args, **kwargs):
-        super(RedemptionLotManagerAdapter, self).__init__(*args, **kwargs)
+        super(BargainLotManagerAdapter, self).__init__(*args, **kwargs)
         self.related_processes_manager = RelatedProcessManager(
             parent=self.context,
             parent_name='lot'

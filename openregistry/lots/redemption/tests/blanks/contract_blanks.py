@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from openregistry.lots.redemption.constants import (
+from openregistry.lots.bargain.constants import (
     CONTRACT_TYPE
 )
 
-from openregistry.lots.redemption.tests.fixtures import create_single_lot, check_patch_status_200
+from openregistry.lots.bargain.tests.fixtures import create_single_lot, check_patch_status_200
 
 
 def patch_contracts_by(self, role):

@@ -7,11 +7,11 @@ from openregistry.lots.core.tests.base import (
     RelatedProcessesTestMixinBase,
 )
 
-from openregistry.lots.redemption.tests.json_data import (
+from openregistry.lots.bargain.tests.json_data import (
     test_related_process_data,
-    test_redemption_lot_data,
+    test_bargain_lot_data,
 )
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     LotContentWebTest
 )
 
@@ -31,7 +31,7 @@ class RelatedProcessesTestMixin(RelatedProcessesTestMixinBase):
         self.access_header = {'X-Access-Token': str(token)}
 
         self.initial_related_process_data = test_related_process_data
-        self.base_resource_initial_data = test_redemption_lot_data
+        self.base_resource_initial_data = test_bargain_lot_data
 
     def test_create_2_related_processes_in_the_batch_mode(self):
         self.mixinSetUp()

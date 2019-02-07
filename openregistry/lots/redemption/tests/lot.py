@@ -7,13 +7,13 @@ from openregistry.lots.core.tests.blanks.mixins import (
     ResourceTestMixin,
     ExtractCredentialsMixin
 )
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     BaseLotWebTest,
     LotContentWebTest
 )
 
-from openregistry.lots.redemption.tests.json_data import test_redemption_lot_data
-from openregistry.lots.redemption.tests.blanks.lot_blanks import (
+from openregistry.lots.bargain.tests.json_data import test_bargain_lot_data
+from openregistry.lots.bargain.tests.blanks.lot_blanks import (
     dateModified_resource,
     # LotResourceTest
     change_draft_lot,
@@ -38,11 +38,11 @@ from openregistry.lots.redemption.tests.blanks.lot_blanks import (
     simple_add_lot,
     simple_patch,
 )
-from openregistry.lots.redemption.models import Lot
+from openregistry.lots.bargain.models import Lot
 
 
 class LotTest(BaseWebTest):
-    initial_data = test_redemption_lot_data
+    initial_data = test_bargain_lot_data
     relative_to = os.path.dirname(__file__)
     test_simple_add_lot = snitch(simple_add_lot)
 

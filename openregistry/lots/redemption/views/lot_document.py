@@ -16,7 +16,7 @@ from openregistry.lots.core.validation import (
 from openregistry.lots.core.validation import (
     validate_lot_document_update_not_by_author_or_lot_owner
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_document_operation_in_not_allowed_lot_status,
     validate_file_upload,
     validate_document_data
@@ -38,10 +38,10 @@ patch_validators = (
 )
 
 
-@oplotsresource(name='redemption:Lot Documents',
+@oplotsresource(name='bargain:Lot Documents',
                 collection_path='/lots/{lot_id}/documents',
                 path='/lots/{lot_id}/documents/{document_id}',
-                _internal_type='redemption',
+                _internal_type='bargain',
                 description="Lot related binary files (PDFs, etc.)")
 class LotDocumentResource(APIResource):
 

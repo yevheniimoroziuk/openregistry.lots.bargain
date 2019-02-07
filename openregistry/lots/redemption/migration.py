@@ -9,15 +9,15 @@ from openregistry.lots.core.migration import (
 LOGGER = logging.getLogger(__name__)
 
 
-class RedemptionMigrationsRunner(BaseMigrationsRunner):
+class BargainMigrationsRunner(BaseMigrationsRunner):
 
     SCHEMA_VERSION = 1
-    SCHEMA_DOC = 'openregistry_lots_redemption_schema'
+    SCHEMA_DOC = 'openregistry_lots_bargain_schema'
 
 
 MIGRATION_STEPS = []
 
 
 def migrate(db):
-    runner = RedemptionMigrationsRunner(db)
+    runner = BargainMigrationsRunner(db)
     runner.migrate(MIGRATION_STEPS)

@@ -4,18 +4,18 @@ from copy import deepcopy
 
 from openregistry.lots.core.tests.base import snitch
 
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     LotContentWebTest
 )
 from openregistry.lots.core.tests.blanks.json_data import test_loki_item_data
-from openregistry.lots.redemption.tests.blanks.item_blanks import (
+from openregistry.lots.bargain.tests.blanks.item_blanks import (
     create_item_resource,
     patch_item,
     update_items_in_forbidden,
     list_item_resource,
     patch_items_with_lot
 )
-from openregistry.lots.redemption.constants import LOT_STATUSES
+from openregistry.lots.bargain.constants import LOT_STATUSES
 
 
 class LotItemResourceTest(LotContentWebTest):

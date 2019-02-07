@@ -10,9 +10,9 @@ from openregistry.lots.core.tests.blanks.json_data import (
 
 
 now = get_now()
-test_redemption_document_data = deepcopy(test_document_data)
-test_redemption_document_data['documentType'] = 'notice'
-test_redemption_document_data['documentOf'] = 'lot'
+test_bargain_document_data = deepcopy(test_document_data)
+test_bargain_document_data['documentType'] = 'notice'
+test_bargain_document_data['documentOf'] = 'lot'
 
 auction_common = {
     'value': {
@@ -37,10 +37,10 @@ auction_common = {
 }
 
 
-test_redemption_lot_data = {
+test_bargain_lot_data = {
     "title": u"Тестовий лот",
     "description": u"Щось там тестове",
-    "lotType": "redemption"
+    "lotType": "bargain"
 }
 test_decision_data = {
     'decisionID': 'someDecisionID',

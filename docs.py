@@ -5,15 +5,15 @@ from datetime import timedelta
 from uuid import uuid4
 
 from openregistry.lots.core.tests.base import PrefixedRequestClass, DumpsTestAppwebtest
-from openregistry.lots.redemption.tests.base import BaseLotWebTest
-from openregistry.lots.redemption.tests.json_data import (
+from openregistry.lots.bargain.tests.base import BaseLotWebTest
+from openregistry.lots.bargain.tests.json_data import (
     test_loki_lot_data,
     test_loki_item_data,
     auction_english_data,
     auction_second_english_data
 )
-from openregistry.lots.redemption.models import Lot, Period
-from openregistry.lots.redemption.tests.blanks.lot_blanks import add_decisions, add_cancellationDetails_document
+from openregistry.lots.bargain.models import Lot, Period
+from openregistry.lots.bargain.tests.blanks.lot_blanks import add_decisions, add_cancellationDetails_document
 from openregistry.lots.core.utils import get_now, calculate_business_date
 from openprocurement.api.config import DS
 from openprocurement.api.tests.base import test_config_data

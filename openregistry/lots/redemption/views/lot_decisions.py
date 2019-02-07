@@ -13,7 +13,7 @@ from openregistry.lots.core.validation import (
     validate_decision_patch_data,
     validate_decision_update_in_not_allowed_status
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_decision_by_decisionOf
 )
 
@@ -28,10 +28,10 @@ patch_validators = (
 )
 
 
-@oplotsresource(name='redemption:Lot Decisions',
+@oplotsresource(name='bargain:Lot Decisions',
                 collection_path='/lots/{lot_id}/decisions',
                 path='/lots/{lot_id}/decisions/{decision_id}',
-                _internal_type='redemption',
+                _internal_type='bargain',
                 description="Lot related decisions")
 class LotDecisionResource(APIResource):
 

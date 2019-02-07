@@ -11,15 +11,15 @@ from openregistry.lots.core.tests.base import (
     BaseLotWebTest as BaseLWT,
     MOCK_CONFIG as BASE_MOCK_CONFIG
 )
-from openregistry.lots.redemption.tests.json_data import (
-    test_redemption_lot_data,
+from openregistry.lots.bargain.tests.json_data import (
+    test_bargain_lot_data,
 )
 
 DEFAULT_ACCELERATION = 1440
 
 
 PARTIAL_MOCK_CONFIG = {
-    "lots.redemption": {
+    "lots.bargain": {
         "use_default": True,
         "aliases": [],
         "accreditation": {
@@ -30,7 +30,7 @@ PARTIAL_MOCK_CONFIG = {
 }
 
 if SANDBOX_MODE:
-    test_redemption_lot_data['sandboxParameters'] = 'quick, accelerator={}'.format(DEFAULT_ACCELERATION)
+    test_bargain_lot_data['sandboxParameters'] = 'quick, accelerator={}'.format(DEFAULT_ACCELERATION)
 
 
 def round_to_two_decimal_places(value):
@@ -50,7 +50,7 @@ class BaseLotWebTest(BaseLWT):
     mock_config = MOCK_CONFIG
 
     def setUp(self):
-        self.initial_data = deepcopy(test_redemption_lot_data)
+        self.initial_data = deepcopy(test_bargain_lot_data)
         super(BaseLotWebTest, self).setUp()
 
 

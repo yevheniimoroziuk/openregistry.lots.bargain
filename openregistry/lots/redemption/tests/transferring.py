@@ -6,8 +6,8 @@ from openregistry.lots.core.tests.plugins.transferring.mixins import (
     LotOwnershipChangeTestCaseMixin
 )
 
-from openregistry.lots.redemption.tests.base import LotContentWebTest
-from openregistry.lots.redemption.tests.blanks.transferring import switch_mode
+from openregistry.lots.bargain.tests.base import LotContentWebTest
+from openregistry.lots.bargain.tests.blanks.transferring import switch_mode
 
 
 class LotOwnershipChangeResourceTest(LotContentWebTest,

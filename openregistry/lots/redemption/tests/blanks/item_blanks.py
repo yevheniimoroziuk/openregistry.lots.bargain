@@ -2,8 +2,8 @@
 from copy import deepcopy
 from uuid import uuid4
 
-from openregistry.lots.redemption.tests.json_data import test_loki_item_data
-from openregistry.lots.redemption.tests.fixtures import (
+from openregistry.lots.bargain.tests.json_data import test_loki_item_data
+from openregistry.lots.bargain.tests.fixtures import (
     add_decisions,
     add_lot_decision,
     add_auctions,

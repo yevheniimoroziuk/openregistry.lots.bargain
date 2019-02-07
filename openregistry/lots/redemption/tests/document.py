@@ -11,12 +11,12 @@ from openregistry.lots.core.tests.blanks.document import (
     create_resource_document_json_invalid,
 )
 
-from openregistry.lots.redemption.tests.base import (
+from openregistry.lots.bargain.tests.base import (
     LotContentWebTest
 )
-from openregistry.lots.redemption.tests.json_data import test_redemption_document_data
-from openregistry.lots.redemption.constants import LOT_DOCUMENT_TYPES
-from openregistry.lots.redemption.tests.blanks.document_blanks import (
+from openregistry.lots.bargain.tests.json_data import test_bargain_document_data
+from openregistry.lots.bargain.constants import LOT_DOCUMENT_TYPES
+from openregistry.lots.bargain.tests.blanks.document_blanks import (
     create_resource_document_json,
     put_resource_document_json,
     patch_resource_document,
@@ -45,7 +45,7 @@ class LotDocumentWithDSResourceTest(LotContentWebTest):
 
     def setUp(self):
         super(LotDocumentWithDSResourceTest, self).setUp()
-        self.initial_document_data = deepcopy(test_redemption_document_data)
+        self.initial_document_data = deepcopy(test_bargain_document_data)
         self.initial_document_data['url'] = self.generate_docservice_url()
 
 

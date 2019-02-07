@@ -116,7 +116,7 @@ PLATFORM_LEGAL_DETAILS_DOC_DATA = {
 }
 
 
-DEFAULT_LOT_TYPE = 'redemption'
+DEFAULT_LOT_TYPE = 'bargain'
 
 DECISION_EDITING_STATUSES = ['pending', 'composing']
 CURRENCY_CHOICES = ['UAH']

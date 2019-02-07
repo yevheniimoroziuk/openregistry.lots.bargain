@@ -5,13 +5,13 @@ version = '0.0.1'
 
 entry_points = {
     'openregistry.lots.core.plugins': [
-        'lots.redemption = openregistry.lots.redemption.includeme:includeme'
+        'lots.bargain = openregistry.lots.bargain.includeme:includeme'
     ],
     'openregistry.tests': [
-        'lots.redemption = openregistry.lots.redemption.tests.main:suite'
+        'lots.bargain = openregistry.lots.bargain.tests.main:suite'
     ],
-    'lots.redemption.migration': [
-        'main = openregistry.lots.redemption.migration:migrate'
+    'lots.bargain.migration': [
+        'main = openregistry.lots.bargain.migration:migrate'
     ]
 }
 
@@ -27,7 +27,7 @@ docs_requires = requires + [
     'sphinxcontrib-httpdomain',
 ]
 
-setup(name='openregistry.lots.redemption',
+setup(name='openregistry.lots.bargain',
       version=version,
       description="",
       long_description=(
@@ -44,7 +44,7 @@ setup(name='openregistry.lots.redemption',
       author='Quintagroup, Ltd.',
       author_email='info@quintagroup.com',
       license='Apache License 2.0',
-      url='https://github.com/openprocurement/openregistry.lots.redemption',
+      url='https://github.com/openprocurement/openregistry.lots.bargain',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['openregistry', 'openregistry.lots'],
       include_package_data=True,

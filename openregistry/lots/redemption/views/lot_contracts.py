@@ -7,10 +7,10 @@ from openregistry.lots.core.utils import (
 from openregistry.lots.core.utils import (
     oplotsresource, apply_patch, save_lot
 )
-from openregistry.lots.redemption.utils import (
+from openregistry.lots.bargain.utils import (
     process_caravan_contract_report_result
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_contracts_data,
 )
 patch_validators = (
@@ -18,10 +18,10 @@ patch_validators = (
 )
 
 
-@oplotsresource(name='redemption:Lot Contracts',
+@oplotsresource(name='bargain:Lot Contracts',
                 collection_path='/lots/{lot_id}/contracts',
                 path='/lots/{lot_id}/contracts/{contract_id}',
-                _internal_type='redemption',
+                _internal_type='bargain',
                 description="Lot related contracts")
 class LotContractResource(APIResource):
 

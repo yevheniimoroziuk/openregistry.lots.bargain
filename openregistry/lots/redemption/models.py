@@ -31,7 +31,7 @@ from openregistry.lots.core.models import (
     ILot,
     Lot as BaseLot,
 )
-from openregistry.lots.redemption.constants import (
+from openregistry.lots.bargain.constants import (
     LOT_STATUSES,
     AUCTION_STATUSES,
     CONTRACT_STATUSES,
@@ -39,7 +39,7 @@ from openregistry.lots.redemption.constants import (
     CURRENCY_CHOICES,
     DEFAULT_PROCUREMENT_TYPE
 )
-from openregistry.lots.redemption.roles import (
+from openregistry.lots.bargain.roles import (
     lot_roles,
     auction_roles,
     decision_roles,
@@ -47,7 +47,7 @@ from openregistry.lots.redemption.roles import (
 )
 
 
-class IRedemptionLot(ILot):
+class IBargainLot(ILot):
     """ Marker interface for basic lots """
 
 
@@ -55,11 +55,11 @@ class LotDocument(Document):
     documentType = StringType(choices=LOT_DOCUMENT_TYPES, required=True)
 
 
-class RedemptionValue(Value):
+class BargainValue(Value):
     currency = StringType(required=True, default=DEFAULT_CURRENCY, choices=CURRENCY_CHOICES, max_length=3, min_length=3)
 
 
-class RedemptionGuarantee(Guarantee):
+class BargainGuarantee(Guarantee):
     currency = StringType(required=True, default=DEFAULT_CURRENCY, choices=CURRENCY_CHOICES, max_length=3, min_length=3)
 
 
@@ -87,8 +87,8 @@ class Auction(Model):
     relatedProcessID = StringType()
     status = StringType(choices=AUCTION_STATUSES)
     procurementMethodType = StringType(choices=[DEFAULT_PROCUREMENT_TYPE])
-    value = ModelType(RedemptionValue)
-    guarantee = ModelType(RedemptionGuarantee)
+    value = ModelType(BargainValue)
+    guarantee = ModelType(BargainGuarantee)
     bankAccount = ModelType(BankAccount)
 
     if SANDBOX_MODE:
@@ -128,7 +128,7 @@ class Contract(Model):
         return role
 
 
-@implementer(IRedemptionLot)
+@implementer(IBargainLot)
 class Lot(BaseLot):
     class Options:
         roles = lot_roles
@@ -136,7 +136,7 @@ class Lot(BaseLot):
     title = StringType()
     status = StringType(choices=LOT_STATUSES, default='draft')
     description = StringType()
-    lotType = StringType(default="redemption")
+    lotType = StringType(default="bargain")
     lotCustodian = ModelType(AssetCustodian, serialize_when_none=False)
     lotHolder = ModelType(AssetHolder, serialize_when_none=False)
     officialRegistrationID = StringType(serialize_when_none=False)
@@ -147,7 +147,7 @@ class Lot(BaseLot):
     auctions = ListType(ModelType(Auction), default=list(), max_size=1)
     contracts = ListType(ModelType(Contract), default=list())
 
-    _internal_type = 'redemption'
+    _internal_type = 'bargain'
 
     def get_role(self):
         root = self.__parent__

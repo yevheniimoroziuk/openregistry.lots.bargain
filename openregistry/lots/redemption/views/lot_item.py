@@ -11,7 +11,7 @@ from openregistry.lots.core.utils import (
 from openregistry.lots.core.validation import (
     validate_update_item_in_not_allowed_status
 )
-from openregistry.lots.redemption.validation import (
+from openregistry.lots.bargain.validation import (
     validate_item_data,
     validate_patch_item_data
 )
@@ -26,10 +26,10 @@ patch_validators = (
 )
 
 
-@oplotsresource(name='redemption:Lot Items',
+@oplotsresource(name='bargain:Lot Items',
                 collection_path='/lots/{lot_id}/items',
                 path='/lots/{lot_id}/items/{item_id}',
-                _internal_type='redemption',
+                _internal_type='bargain',
                 description="Lot related items")
 class LotItemResource(APIResource):
 

@@ -6,9 +6,9 @@ from copy import deepcopy
 from openregistry.lots.core.constants import SANDBOX_MODE
 
 
-from openregistry.lots.redemption.constants import DEFAULT_PROCUREMENT_TYPE
-from openregistry.lots.redemption.tests.json_data import test_loki_item_data
-from openregistry.lots.redemption.tests.fixtures import (
+from openregistry.lots.bargain.constants import DEFAULT_PROCUREMENT_TYPE
+from openregistry.lots.bargain.tests.json_data import test_loki_item_data
+from openregistry.lots.bargain.tests.fixtures import (
     create_single_lot,
     check_patch_status_200,
     add_decisions,
