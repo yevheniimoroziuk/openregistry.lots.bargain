@@ -71,10 +71,10 @@ class LotDocumentResource(APIResource):
             self.request.response.status = 201
             document_route = self.request.matched_route.name.replace("collection_", "")
             self.request.response.headers['Location'] = self.request.current_route_url(
-                                                            _route_name=document_route,
-                                                            document_id=document.id,
-                                                            _query={}
-                                                            )
+                _route_name=document_route,
+                document_id=document.id,
+                _query={}
+            )
             return {'data': document.serialize("view")}
 
     @json_view(permission='view_lot')

@@ -39,7 +39,6 @@ class LotDocumentWithDSResourceTest(LotContentWebTest):
     test_08_put_resource_document_json = snitch(put_resource_document_json)
     test_09_model_validation = snitch(model_validation)
 
-
     # status, in which operations with lot documents (adding, updating) are forbidden
     forbidden_document_modification_actions_status = 'active.salable'
 
