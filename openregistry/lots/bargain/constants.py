@@ -3,13 +3,13 @@ from copy import copy
 from openregistry.lots.core.constants import LOKI_DOCUMENT_TYPES
 
 
-AUCTION_STATUSES = ['scheduled', 'active', 'complete',  'unsuccessful', 'cancelled']
+AUCTION_STATUSES = ['scheduled', 'active', 'complete', 'unsuccessful', 'cancelled']
 CONTRACT_STATUSES = ['scheduled', 'cancelled', 'active', 'unsuccessful', 'complete']
 
 CONTRACT_TYPE = 'yoke'
 
 LOT_STATUSES = [
-    "draft", "composing", "verification",  "pending", "pending.deleted", "deleted", "active.salable",
+    "draft", "composing", "verification", "pending", "pending.deleted", "deleted", "active.salable",
     "active.auction", "active.contracting", "pending.sold", "pending.dissolution", "sold", "dissolved", "invalid"]
 
 ITEM_EDITING_STATUSES = ['pending']

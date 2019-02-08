@@ -7,7 +7,6 @@ from zope.interface import implementer
 from openregistry.lots.core.constants import (
     SANDBOX_MODE,
     DEFAULT_CURRENCY,
-    TZ
 )
 
 from openregistry.lots.core.models import (

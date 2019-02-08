@@ -52,10 +52,10 @@ class LotItemResource(APIResource):
             self.request.response.status = 201
             item_route = self.request.matched_route.name.replace("collection_", "")
             self.request.response.headers['Location'] = self.request.current_route_url(
-                                                            _route_name=item_route,
-                                                            item_id=item.id,
-                                                            _query={}
-                                                            )
+                _route_name=item_route,
+                item_id=item.id,
+                _query={}
+            )
             return {'data': item.serialize("view")}
 
     @json_view(permission='view_lot')

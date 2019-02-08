@@ -38,7 +38,6 @@ def patch_auctions_with_lot(self):
     add_auctions(self, lot, access_header)
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification', access_header)
 
-
     self.app.authorization = ('Basic', ('concierge', ''))
 
     check_patch_status_200(self, '/{}'.format(lot['id']), 'verification')
@@ -57,9 +56,9 @@ def patch_auction_by_concierge(self):
     data['value']['amount'] = 99
 
     response = self.app.patch_json('/{}/auctions/{}'.format(self.resource_id, auction['id']),
-        headers=self.access_header, params={
-            'data': data
-            })
+                                   headers=self.access_header, params={
+        'data': data
+    })
 
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
@@ -68,15 +67,15 @@ def patch_auction_by_concierge(self):
     self.assertEqual(response.json['data']['guarantee'], data['guarantee'])
 
     self.app.authorization = ('Basic', ('concierge', ''))
-    
+
     response = self.app.patch_json('/{}/auctions/{}'.format(self.resource_id, auction['id']),
-        headers=self.access_header, params={
-            'data': {
-                'status': 'unsuccessful',
-                'auctionID': 'someAuctionID',
-                'relatedProcessID': '1' * 32
-            }
-            })
+                                   headers=self.access_header, params={
+        'data': {
+            'status': 'unsuccessful',
+            'auctionID': 'someAuctionID',
+            'relatedProcessID': '1' * 32
+        }
+    })
     self.assertEqual(response.json['data']['status'], 'unsuccessful')
     self.assertEqual(response.json['data']['auctionID'], 'someAuctionID')
     self.assertEqual(response.json['data']['relatedProcessID'], '1' * 32)
@@ -90,9 +89,9 @@ def patch_auction(self):
     auction = response.json['data'][0]
 
     response = self.app.patch_json('/{}/auctions/{}'.format(self.resource_id, auction['id']),
-        headers=self.access_header, params={
-            'data': data
-            })
+                                   headers=self.access_header, params={
+        'data': data
+    })
 
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
@@ -108,7 +107,9 @@ def patch_auction(self):
     self.assertEqual(auction['guarantee']['amount'], data['guarantee']['amount'])
 
 
-@unittest.skipIf(not SANDBOX_MODE, 'If sandbox mode is enabled auctionParameters has additional field procurementMethodDetails')
+@unittest.skipIf(
+    not SANDBOX_MODE,
+    'If sandbox mode is enabled auctionParameters has additional field procurementMethodDetails')
 def procurementMethodDetails_check_with_sandbox(self):
     response = self.app.get('/{}'.format(self.resource_id))
     lot = response.json['data']

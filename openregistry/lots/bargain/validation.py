@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from openregistry.lots.core.utils import (
     update_logging_context,
-    get_now,
     error_handler,
     raise_operation_error,
     get_first_document,
@@ -9,7 +8,6 @@ from openregistry.lots.core.utils import (
     set_first_document_fields,
     get_type,
     update_document_url,
-    calculate_business_date
 )
 from openregistry.lots.core.validation import (
     validate_data
@@ -61,7 +59,6 @@ def validate_document_operation_in_not_allowed_lot_status(request, error_handler
                               'Can\'t update document in current ({}) lot status'.format(status))
 
 
-
 # Item validation
 def validate_item_data(request, error_handler, **kwargs):
     update_logging_context(request, {'item_id': '__new__'})
@@ -100,20 +97,20 @@ def validate_auction_data(request, error_handler, **kwargs):
 def validate_update_auction_in_not_allowed_status(request, error_handler, **kwargs):
     is_convoy_or_concierge = bool(request.authenticated_role in ['convoy', 'concierge'])
     if not is_convoy_or_concierge and request.validated['lot_status'] not in ['draft', 'composing', 'pending']:
-            raise_operation_error(
-                request,
-                error_handler,
-                'Can\'t update auction in current ({}) lot status'.format(request.validated['lot_status'])
-            )
+        raise_operation_error(
+            request,
+            error_handler,
+            'Can\'t update auction in current ({}) lot status'.format(request.validated['lot_status'])
+        )
 
 
 def validate_update_auction_document_in_not_allowed_status(request, error_handler, **kwargs):
     if request.validated['lot_status'] not in ['draft', 'composing', 'pending']:
-            raise_operation_error(
-                request,
-                error_handler,
-                'Can\'t update document of auction in current ({}) lot status'.format(request.validated['lot_status'])
-            )
+        raise_operation_error(
+            request,
+            error_handler,
+            'Can\'t update document of auction in current ({}) lot status'.format(request.validated['lot_status'])
+        )
 
 
 # Contract validation
@@ -157,10 +154,10 @@ def validate_verification_status(request, error_handler):
         # Decision validation
         if not any(decision.decisionOf == 'lot' for decision in request.context.decisions):
             raise_operation_error(
-                        request,
-                        error_handler,
-                        'Can\'t switch to verification while lot decisions not available.'
-                    )
+                request,
+                error_handler,
+                'Can\'t switch to verification while lot decisions not available.'
+            )
 
         # Auction validation
         lot = request.validated['lot']
