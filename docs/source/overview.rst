@@ -6,7 +6,7 @@ openregistry.lots.bargain contains the description of the Lots Registry.
 Features
 --------
 
-* Lot represents the finalized object to be privatized within the process.
+* Lot represents the finalized object to be privatized within the buyout process.
 * One asset only may be included in a single lot.
 * Asset which is included in lot, marked as attached to it and can't be used for other lots formation.
 * Lot can be deleted only in case of `documentType: cancellationDetails` has been attached.
@@ -35,7 +35,6 @@ code and the JSON returned will have an `errors` field at the top level
 containing a list of problems.  We look at the first one and print out its
 message.
 
----------------------
 
 Project status
 --------------
@@ -49,12 +48,6 @@ Documentation of related packages
 ---------------------------------
 
 * `Assets Registry <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/index.html>`_
-
-* `OpenProcurement API <http://api-docs.openprocurement.org/en/latest/>`_
-
-* `Sellout.english <http://sellout-english.api-docs.ea2.openprocurement.io/en/latest/>`_
-
-* `Contracting <http://ceasefire.api-docs.ea2.openprocurement.io/en/latest/standard/contract.html>`_
 
 API stability
 -------------

@@ -112,23 +112,23 @@ Schema
 :decisions:
     Array of :ref:`Decisions`, required
 
-    Also include the data from `asset.decisions <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/standard/asset.html#decisions>`_.
+    Also include the data from `asset.decisions`.
     
 :lotCustodian:
 
    :ref:`Organization`, required
 
-   An entity managing the lot. Initial data originates from `asset.assetCustodian <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/standard/organization.html#organization>`_.
+   An entity managing the lot. Initial data originates from `asset.assetCustodian`.
 
 :items:
     Array of :ref:`Items`, required
 
-    Initial data originates from `asset.items <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/standard/item.html>`_.
+    Initial data originates from `asset.items`.
 
 :lotHolder:
    :ref:`Organization`, required
 
-   Initial data originates from `asset.assetHolder <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/standard/organization.html#organization>`_.
+   Initial data originates from `asset.assetHolder`.
 
 :rectificationPeriod:
     :ref:`Period`, auto-generated, read-only
@@ -161,9 +161,9 @@ Schema
 
     Type of the given lot. Given value:
 
-    * `yoke` - lotType for the small scale privatization process.
+    * `bargain` - lotType for the buyout.
 
-.. _period:    
+.. _period:
 
 Period
 ======
@@ -190,32 +190,6 @@ Date
 ====
 
 Date/time in `ISO 8601 <https://en.wikipedia.org/wiki/ISO_8601#Dates>`_.
-
-
-.. _value:
-
-Value
-=====
-
-Schema
-------
-
-:amount:    
-    float, required
-
-    Should be positive.
-    
-:currency:
-    string, required
-    
-    |ocdsDescription|
-    The currency in 3-letter ISO 4217 format.
-    
-:valueAddedTaxIncluded:
-    bool, required
-
-    Possible values are `true` or `false`.
-
 
 .. _decisions:
 
@@ -257,31 +231,3 @@ Schema
     string, auto-generated
 
     Internal id of related asset.
-
-
-.. _contracts:
-
-Сontracts
-=========
-
-Schema
-------
-
-:type:
-  string, auto-generated, read-only
-
-  Type of the contract. The only value is `yoke`.
-
-:id:
-  uuid, auto-generated, read-only
-
-  Internal identifier of the object within the Module of Contracting.
-
-  Added as long as the contract is being created within the Module of Contracting.
-
-:status:
-  string, auto-generated, read-only
-
-  Status of contract within the Module of Contracting.
-
-  Added as long as the contract is being created within the Module of Contracting.
