@@ -62,7 +62,8 @@ def create_resource_document_json(self):
     self.assertEqual(
         response.json['errors'][0]["description"],
         "Can't update document in current ({}) {} status".format(
-            self.forbidden_document_modification_actions_status, self.resource_name[:-1]
+            self.forbidden_document_modification_actions_status,
+            self.resource_name[:-1]
         )
     )
 
@@ -82,8 +83,10 @@ def put_resource_document_json(self):
     data = deepcopy(self.initial_document_data)
     data['title'] = 'name.doc'
     data['url'] = self.generate_docservice_url()
-    response = self.app.put_json('/{}/documents/{}'.format(self.resource_id, doc_id),
-                                 headers=self.access_header, params={'data': data})
+    response = self.app.put_json(
+        '/{}/documents/{}'.format(self.resource_id, doc_id),
+        headers=self.access_header, params={'data': data}
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(doc_id, response.json["data"]["id"])
@@ -125,9 +128,11 @@ def put_resource_document_json(self):
     data = deepcopy(self.initial_document_data)
     data['title'] = 'name.doc'
     data['url'] = self.generate_docservice_url()
-    response = self.app.post_json('/{}/documents'.format(self.resource_id),
-                                  headers=self.access_header, params={
-        'data': data})
+    response = self.app.post_json(
+        '/{}/documents'.format(self.resource_id),
+        headers=self.access_header,
+        params={'data': data}
+    )
     self.assertEqual(response.status, '201 Created')
     self.assertEqual(response.content_type, 'application/json')
     doc_id = response.json["data"]['id']
@@ -175,8 +180,8 @@ def put_resource_document_json(self):
     self.assertEqual(
         response.json['errors'][0]["description"],
         "Can't update document in current ({}) {} status".format(
-            self.forbidden_document_modification_actions_status, self.resource_name[:-1]
-        )
+             self.forbidden_document_modification_actions_status, self.resource_name[:-1]
+         )
     )
 
 
@@ -192,12 +197,15 @@ def patch_resource_document(self):
     self.assertEqual(u'укр.doc', response.json["data"]["title"])
     self.assertEqual(self.initial_document_data["documentType"], response.json["data"]['documentType'])
 
-    response = self.app.patch_json('/{}/documents/{}'.format(self.resource_id, doc_id),
-                                   headers=self.access_header, params={
-        'data': {
-            'documentOf': 'wrong_document_of',
-            'relatedItem': '0' * 32
-        }}, status=422)
+    response = self.app.patch_json(
+        '/{}/documents/{}'.format(self.resource_id, doc_id),
+        headers=self.access_header, params={
+            'data': {
+                'documentOf': 'wrong_document_of',
+                'relatedItem': '0' * 32
+            }},
+        status=422
+    )
     self.assertEqual(response.status, '422 Unprocessable Entity')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['status'], 'error')
@@ -205,22 +213,36 @@ def patch_resource_document(self):
         {u'description': [u"Value must be one of ['lot', 'item']."], u'location': u'body', u'name': u'documentOf'}
     ])
 
-    response = self.app.patch_json('/{}/documents/{}'.format(self.resource_id, doc_id),
-                                   headers=self.access_header, params={
-        "data": {
-            "description": "document description",
-            "documentType": 'tenderNotice'
-        }}, status=422)
+    response = self.app.patch_json(
+        '/{}/documents/{}'.format(self.resource_id, doc_id),
+        headers=self.access_header, params={
+            "data": {
+                "description": "document description",
+                "documentType": 'tenderNotice'
+            }},
+        status=422
+    )
     self.assertEqual(response.status, '422 Unprocessable Entity')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['status'], 'error')
-    self.assertEqual(response.json['errors'], [{u'description': [u"Value must be one of {}.".format(
-        str(self.document_types))], u'location': u'body', u'name': u'documentType'}])
-    response = self.app.patch_json('/{}/documents/{}'.format(self.resource_id, doc_id),
-                                   headers=self.access_header, params={
-        "data": {
-            "description": "document description"
-        }})
+    self.assertEqual(
+        response.json['errors'],
+        [
+            {
+                u'description': [u"Value must be one of {}.".format(str(self.document_types))],
+                u'location': u'body',
+                u'name': u'documentType'
+            }
+        ]
+    )
+    response = self.app.patch_json(
+        '/{}/documents/{}'.format(self.resource_id, doc_id),
+        headers=self.access_header,
+        params={
+            "data": {
+                "description": "document description"
+            }}
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(doc_id, response.json["data"]["id"])
@@ -236,17 +258,22 @@ def patch_resource_document(self):
 
     self.set_status(self.forbidden_document_modification_actions_status)
 
-    response = self.app.patch_json('/{}/documents/{}'.format(self.resource_id, doc_id),
-                                   headers=self.access_header, params={
-        "data": {
-            "description": "document description"
-        }}, status=403)
+    response = self.app.patch_json(
+        '/{}/documents/{}'.format(self.resource_id, doc_id),
+        headers=self.access_header,
+        params={
+            "data": {
+                "description": "document description"
+            }},
+        status=403
+    )
     self.assertEqual(response.status, '403 Forbidden')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(
         response.json['errors'][0]["description"],
         "Can't update document in current ({}) {} status".format(
-            self.forbidden_document_modification_actions_status, self.resource_name[:-1]
+            self.forbidden_document_modification_actions_status,
+            self.resource_name[:-1]
         )
     )
 

@@ -50,10 +50,14 @@ class DummyModelsTest(unittest.TestCase):
             account_details.validate()
         self.assertEqual(
             ex.exception.messages,
-            {'accountIdentification': [{
-                'scheme': [u"Value must be one of ['UA-EDR', 'UA-MFO', 'accountNumber']."],
-                'description': [u"This field is required."]
-            }]
+            {
+                'accountIdentification':
+                [
+                    {
+                     'scheme': [u"Value must be one of ['UA-EDR', 'UA-MFO', 'accountNumber']."],
+                     'description': [u"This field is required."]
+                    }
+                ]
             }
         )
 

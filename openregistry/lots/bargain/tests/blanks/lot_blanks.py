@@ -254,10 +254,13 @@ def dateModified_resource(self):
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data']['dateModified'], dateModified)
 
-    response = self.app.patch_json('/{}'.format(resource['id']),
-                                   headers={'X-Access-Token': token}, params={
-        'data': {'status': 'composing'}
-    })
+    response = self.app.patch_json(
+        '/{}'.format(resource['id']),
+        headers={'X-Access-Token': token},
+        params={
+            'data': {'status': 'composing'}
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data']['status'], 'composing')
@@ -598,9 +601,11 @@ def change_pending_lot(self):
     self.assertEqual(response.status, '403 Forbidden')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['status'], 'error')
-    self.assertEqual(response.json['errors'][0]['description'],
-                     u"You can set deleted status "
-                     u"only when lot have at least one document with \'cancellationDetails\' documentType")
+    self.assertEqual(
+        response.json['errors'][0]['description'],
+        u"You can set deleted status "
+        u"only when lot have at least one document with \'cancellationDetails\' documentType"
+    )
 
     # Move from 'pending' to 'deleted' status
     add_cancellationDetails_document(self, lot, access_header)
@@ -658,9 +663,11 @@ def change_pending_lot(self):
     self.assertEqual(response.status, '403 Forbidden')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['status'], 'error')
-    self.assertEqual(response.json['errors'][0]['description'],
-                     u"You can set deleted status "
-                     u"only when lot have at least one document with \'cancellationDetails\' documentType")
+    self.assertEqual(
+        response.json['errors'][0]['description'],
+        u"You can set deleted status "
+        u"only when lot have at least one document with \'cancellationDetails\' documentType"
+    )
 
     # Move from 'pending' to 'deleted'
     self.app.authorization = ('Basic', ('broker', ''))

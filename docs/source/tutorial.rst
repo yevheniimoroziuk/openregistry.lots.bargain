@@ -70,6 +70,13 @@ To enable further manipulations with the lot, its status should be manually swit
 .. literalinclude:: tutorial/lot-to-varification.http
    :language: javascript
 
+After concierge switch lot status to `pending`.
+Owner has an opportunity to switch lot status to `active.salable`.
+The procedure will be formed automatically after this action.:
+
+.. literalinclude:: tutorial/owner-patch-lot-to-active.salable.http
+   :language: javascript
+
 Success! Now we can see that new object was created. Response code is `201`
 and `Location` response header reports the location of the created object.  The
 body of response reveals the information about the created asset: its internal
@@ -129,8 +136,6 @@ Let's update lot description:
 .. XXX body is empty for some reason (printf fails)
 
 We see the added properties have merged with existing lot data. Additionally, the `dateModified` property was updated to reflect the last modification date stamp.
-
-`Note` that lot can be modified only within the rectification period (up to `rectificationPeriod.endDate`).
 
 Checking the listing again reflects the new modification date:
 
@@ -196,30 +201,17 @@ turns to `sold`. The given lot becomes:
 Convoy operations
 -----------------
 
-The procedure will be formed automatically after `rectificationPeriod.endDate`. For this to be done, lot status automatically receives `active.salable` at first:
-
-.. literalinclude:: tutorial/concierge-patched-lot-to-active.salable.http
-   :language: javascript
-
 When the procedure is successfully created, lot status changes to `active.auction`: 
 
 .. literalinclude:: tutorial/switch-lot-active.auction.http
    :language: javascript
 
-If the procedure (`procurementMethodType: sellout.english`) becomes `unsuccessful`, lot status turns to `active.salable`:
 
-.. literalinclude:: tutorial/concierge-patched-lot-to-active.salable.http
-   :language: javascript
-
-As long as a new procedure is being automatically created, the lot will be given `active.auction` status:
-
-.. literalinclude:: tutorial/switch-lot-active.auction.http
-   :language: javascript
-
-In case of that lot has not been sold (either `contract` has become `unsuccessful` or a procedure has received `cancelled` status or third procedure (`procurementMethodType: sellout.insider`) has turned to `unsuccessful`) , its status becomes `pending.dissolution`. This happens if all three auctions are in `unsuccessful` status or one has been given `cancelled`. The given lot becomes:
+In case of that lot has not been sold (either `contract` has become `unsuccessful` or a procedure has received `cancelled` status or `unsuccessful`) , its status becomes `pending.dissolution`. The given lot becomes:
 
 .. literalinclude:: tutorial/lot-after-convoy-patch-auction-cancelled.http
    :language: javascript
+
 
 When contract has been successfully created within the Module of Contracting, lot's status turns to `active.contracting`, after what lot becomes `complete`:
 

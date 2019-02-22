@@ -16,9 +16,13 @@ def patch_contracts_by(self, role):
     self.assertEqual(contract['status'], 'scheduled')
 
     self.app.authorization = ('Basic', (role, ''))
-    response = self.app.patch_json('/{}/contracts/{}'.format(self.resource_id, contract_id),
-                                   headers=self.access_header, params={
-        "data": self.initial_contract_data})
+    response = self.app.patch_json(
+        '/{}/contracts/{}'.format(self.resource_id, contract_id),
+        headers=self.access_header,
+        params={
+            "data": self.initial_contract_data
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(contract_id, response.json["data"]["id"])
@@ -26,9 +30,13 @@ def patch_contracts_by(self, role):
     self.assertEqual(response.json["data"]["contractID"], self.initial_contract_data['contractID'])
     self.assertEqual(response.json["data"]["relatedProcessID"], self.initial_contract_data['relatedProcessID'])
 
-    response = self.app.patch_json('/{}/contracts/{}'.format(self.resource_id, contract_id),
-                                   headers=self.access_header, params={
-        "data": {'type': 'WRONG', 'id': '1' * 32}})
+    response = self.app.patch_json(
+        '/{}/contracts/{}'.format(self.resource_id, contract_id),
+        headers=self.access_header,
+        params={
+            "data": {'type': 'WRONG', 'id': '1' * 32}
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertIsNone(response.json)
@@ -41,9 +49,13 @@ def patch_contracts_by(self, role):
     self.assertEqual(contract['id'], contract_id)
 
     # Patch status
-    response = self.app.patch_json('/{}/contracts/{}'.format(self.resource_id, contract_id),
-                                   headers=self.access_header, params={
-        "data": {'status': 'active'}})
+    response = self.app.patch_json(
+        '/{}/contracts/{}'.format(self.resource_id, contract_id),
+        headers=self.access_header,
+        params={
+            "data": {'status': 'active'}
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(response.json['data']['status'], 'active')
@@ -101,9 +113,9 @@ def patch_contracts_with_lot(self):
     # With two contracts
     data = {
         'contracts': [
-            {'contractID': 'newContractID'},
-            {'contractID': 'newContractID2'}
-        ]
+                {'contractID': 'newContractID'},
+                {'contractID': 'newContractID2'}
+            ]
     }
 
     response = self.app.patch_json(

@@ -66,9 +66,12 @@ def update_items_in_forbidden(self):
     data['quantity'] = 99.9999
     for status in self.forbidden_item_statuses_modification:
         self.set_status(status)
-        response = self.app.patch_json('/{}/items/{}'.format(self.resource_id, item_id),
-                                       headers=self.access_header, params={
-            "data": data}, status=403)
+        response = self.app.patch_json(
+            '/{}/items/{}'.format(self.resource_id, item_id),
+            headers=self.access_header,
+            params={"data": data},
+            status=403
+        )
         self.assertEqual(response.status, '403 Forbidden')
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(response.json['errors'][0]["description"],
@@ -76,10 +79,12 @@ def update_items_in_forbidden(self):
 
     for status in self.forbidden_item_statuses_modification:
         self.set_status(status)
-        response = self.app.post_json('/{}/items'.format(self.resource_id),
-                                      headers=self.access_header, params={
-            "data": self.initial_item_data
-        }, status=403)
+        response = self.app.post_json(
+            '/{}/items'.format(self.resource_id),
+            headers=self.access_header,
+            params={"data": self.initial_item_data},
+            status=403
+        )
         self.assertEqual(response.status, '403 Forbidden')
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(response.json['errors'][0]["description"],
@@ -132,28 +137,36 @@ def patch_item(self):
     self.assertEqual(self.initial_item_data['quantity'], response.json["data"]["quantity"])
     self.assertEqual(self.initial_item_data['address'], response.json["data"]["address"])
 
-    response = self.app.patch_json('/{}/items/{}'.format(self.resource_id, item_id),
-                                   headers=self.access_header, params={
-        "data": {
-            "description": "new item description",
-            "registrationDetails": self.initial_item_data['registrationDetails'],
-            "unit": self.initial_item_data['unit'],
-            "address": self.initial_item_data['address'],
-            "quantity": self.initial_item_data['quantity'],
-            "classification": self.initial_item_data['classification'],
-        }})
+    response = self.app.patch_json(
+        '/{}/items/{}'.format(self.resource_id, item_id),
+        headers=self.access_header,
+        params={
+            "data": {
+                "description": "new item description",
+                "registrationDetails": self.initial_item_data['registrationDetails'],
+                "unit": self.initial_item_data['unit'],
+                "address": self.initial_item_data['address'],
+                "quantity": self.initial_item_data['quantity'],
+                "classification": self.initial_item_data['classification'],
+            }
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(item_id, response.json["data"]["id"])
     self.assertEqual(response.json["data"]["description"], 'new item description')
 
     # Test partial update
-    response = self.app.patch_json('/{}/items/{}'.format(self.resource_id, item_id),
-                                   headers=self.access_header, params={
-        "data": {
-            "description": "partial item update",
-            "additionalClassifications": []
-        }})
+    response = self.app.patch_json(
+        '/{}/items/{}'.format(self.resource_id, item_id),
+        headers=self.access_header,
+        params={
+            "data": {
+                "description": "partial item update",
+                "additionalClassifications": []
+            }
+        }
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(item_id, response.json["data"]["id"])
@@ -231,9 +244,11 @@ def patch_items_with_lot(self):
     data = {
         'items': [initial_item_data]
     }
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': data})
+    response = self.app.patch_json(
+        '/{}'.format(lot['id']),
+        headers=access_header,
+        params={'data': data}
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(len(response.json['data']['items']), 1)
@@ -243,10 +258,12 @@ def patch_items_with_lot(self):
     data = {
         'items': [item_data, item_data]
     }
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': data},
-                                   status=422)
+    response = self.app.patch_json(
+        '/{}'.format(lot['id']),
+        headers=access_header,
+        params={'data': data},
+        status=422
+    )
     self.assertEqual(response.status, '422 Unprocessable Entity')
     self.assertEqual(response.content_type, 'application/json')
     self.assertEqual(
@@ -257,9 +274,11 @@ def patch_items_with_lot(self):
     data = {
         'items': [item_data]
     }
-    response = self.app.patch_json('/{}'.format(lot['id']),
-                                   headers=access_header,
-                                   params={'data': data})
+    response = self.app.patch_json(
+        '/{}'.format(lot['id']),
+        headers=access_header,
+        params={'data': data}
+    )
     self.assertEqual(response.status, '200 OK')
     self.assertEqual(response.content_type, 'application/json')
     self.assertNotEqual(
