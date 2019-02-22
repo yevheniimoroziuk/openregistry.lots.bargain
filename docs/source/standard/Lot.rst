@@ -161,7 +161,7 @@ Schema
 
     Type of the given lot. Given value:
 
-    * `bargain` - lotType for the buyout.
+    * `redemption` - lotType for the buyout.
 
 .. _period:
 
