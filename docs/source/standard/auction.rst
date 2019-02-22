@@ -12,7 +12,9 @@ Schema
 ------
 
 :id:
-  string, auto-generated, read-only
+  uuid, auto-generated, read-only
+
+  Internal identifier of object in array.
 
 :auctionID:
   string, auto-generated, read-only
@@ -25,16 +27,12 @@ Schema
 :procurementMethodType:
   string, auto-generated, read-only
 
-  Type that defines what type of the procedure is going to be used. Possible values:
-
-  * `sellout.english` - procedure with the open ascending price auction;
-
-  * `sellout.insider` - procedure with the insider auction.
+  Type that defines what type of the procedure is going to be used. Possible values: `reporting`.
 
 :procurementMethodDetails:
   string, optional 
 
-  Parameter that accelerates auction periods. Set *quick, accelerator=1440* as text value for `procurementMethodDetails` for the time frames to be reduced in 1440 times.
+  Parameter that accelerates auction periods. Set *quick, accelerator=1440* as text value for `procurementMethodDetails` for the time frames to be reduced in 1440 times. This mechanism works only on the sandbox.
 
 :submissionMethodDetails:
   string, optional 
@@ -42,21 +40,6 @@ Schema
   Parameter that works only with mode = "test" and speeds up auction start date. 
 
   Possible value is quick.
-
-:sandboxParameters:
-  string, optional
-
-  Parameter that accelerates lot periods. Set quick, accelerator=1440 as text value for `sandboxParameters` for the time frames to be reduced in 1440 times.
-
-:auctionPeriod:
-  :ref:`period`, required
-
-  Period when the first auction is conducted. Here only `startDate` has be provided.
-
-:tenderingDuration:
-  :ref:`Duration`, required
-
-  Duration of tenderPeriod for 2nd and 3rd procedures within the privatization cycle. 
 
 :documents:
   Array of :ref:`documents` objects, optional
@@ -67,9 +50,7 @@ Schema
 :value:
   :ref:`value`, required
 
-  Total available budget of the 1st auction. Bids lower than ``value`` will be rejected.
-
-  `Auction.value` for 2nd and 3rd auctions within the privatization cycle will be calculated as half of the `auction.value` provided.
+  Initial price of the object to be privatized.
 
   |ocdsDescription|
   The total estimated value of the procurement.
@@ -77,57 +58,31 @@ Schema
 :guarantee:
   :ref:`Guarantee`, required
 
-  Bid guarantee. `Lots.auctions.guarantee` for 2nd and 3rd auctions within the privatization cycle will be calculated auctomatically.
-
-:registrationFee:
-  :ref:`Guarantee`, required
-
-  Bid registration fee. `Lots.auctions.registrationFee` for 2nd and 3rd auctions within the privatization cycle will be calculated auctomatically.
-
-:minimalStep:
-  :ref:`value`, required
-
-  The minimal step of the 1st auction. `Lots.auctions.minimalStep` for 2nd and 3rd auctions within the privatization cycle will be calculated auctomatically.
-
-:auctionParameters:
-  :ref:`auctionParameters`, optional
-
-  Parameters for the auction to be held.
-
-  Ogranizator can optionally set value for the 3rd auction within the `lots.auctions` structure.
+  Bid guarantee. `Lots.auctions.guaran`
 
 :bankAccount:
   :ref:`bankAccount`, required
 
   Details which uniquely identify a bank account, and are used when making or receiving a payment.
-
-:tenderAttempts: 
-  integer, auto-generated, read-only
-
-  The number which represents what time (from 1 up to 3) procedure with a current lot takes place.
   
 :status: 
   string, required
 
   Auction status within which the lot is being sold:
 
-+---------------+------------------------------------------------------------+
-|    Status     |                    Description                             |
-+===============+============================================================+
-|               | The process is planned, but is not yet taking place.       |
-+  `scheduled`  +                                                            +
-|               | Details of the anticipated dates may be provided further   |
-+---------------+------------------------------------------------------------+
-| `active`      | The process is currently taking place                      |
-+---------------+------------------------------------------------------------+
-| `complete`    | The process is complete;                                   |
-+---------------+------------------------------------------------------------+
-| `cancelled`   | The process has been cancelled;                            |
-+---------------+------------------------------------------------------------+
-| `unsuccessful`| The process has been unsuccessful.                         |
-+---------------+------------------------------------------------------------+
-
-  * `unsuccessful` - the process has been unsuccessful.
++---------------+-------------------------------------------------------+
+|    Status     |                    Description                        |
++===============+=======================================================+
+| `scheduled`   | The process is planned, but is not yet taking place.  |
++---------------+-------------------------------------------------------+
+| `active`      | The process is currently taking place                 |
++---------------+-------------------------------------------------------+
+| `complete`    | The process is complete;                              |
++---------------+-------------------------------------------------------+
+| `cancelled`   | The process has been cancelled;                       |
++---------------+-------------------------------------------------------+
+| `unsuccessful`| The process has been unsuccessful.                    |
++---------------+-------------------------------------------------------+
 
 :contracts:
   Array of :ref:`contracts`, auto-generated, read-only
@@ -137,27 +92,7 @@ Schema
 :relatedProcessID:
   uuid, required
 
-  Internal id of the auction.
-
-.. _auctionParameters:
-
-Auction Parameters
-==================
-
-Schema
-------
-
-:type:
-  string, auto-generated, read-only
-
-  Type of the auction.
-
-:dutchSteps:
-  integer, required for the third auction
-
-  Number of steps within the dutch part of the insider auction. 
-
-  Possible values are [1; 100]. Defaul value is 99.
+  Internal id of the procedure.
 
 .. _duration:
 

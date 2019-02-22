@@ -3,7 +3,6 @@
 Performance recommendations
 ===========================
 
-
 Rate Control
 ------------
 

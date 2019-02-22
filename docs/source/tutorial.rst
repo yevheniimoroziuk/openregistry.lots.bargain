@@ -149,7 +149,7 @@ Let's delete lot:
 
 A document with the `documentType: canellationDetails` has to be added first:
 
-.. literalinclude:: tutorial/add_cancellation_docs.http
+.. literalinclude:: tutorial/add_cancellation_docs.hhtp
    :language: javascript
 
 So now lot can be easily deleted:
