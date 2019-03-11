@@ -16,7 +16,7 @@ Lots Workflow
                     "verification" -> "pending" [color="0.6667 1.0000 0.5020"];
                     edge[style=dashed,  arrowhead="vee"];
                     "pending" -> "active.salable" [color="0.6667 1.0000 0.5020"];
-                    edge[style=solid,  dir="both"];
+                    edge[style=solid,  arrowhead="vee"];
                     "active.salable" -> "active.auction" [color="0.6667 1.0000 0.5020"];
                     edge[dir="forward"];
                     "active.auction" -> "active.contracting" [color="0.6667 1.0000 0.5020"];
