@@ -143,7 +143,7 @@ def get_auction_validation_result(lot):
     }
 
     # Get errors from first auction
-    required_fields = ['value', 'guarantee', 'bankAccount']
+    required_fields = ['value', 'bankAccount']
     auction_error_message['description'].extend(get_fields_errors(required_fields, english))
 
     return auction_error_message
