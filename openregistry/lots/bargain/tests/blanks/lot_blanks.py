@@ -120,7 +120,6 @@ def check_change_to_verification(self):
         response.json['errors'][0]['description'][0],
         {
             'value': ['This field is required.'],
-            'guarantee': ['This field is required.'],
             'bankAccount': ['This field is required.'],
         }
     )
