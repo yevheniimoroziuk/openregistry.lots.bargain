@@ -34,19 +34,6 @@ Schema
 
   Parameter that accelerates auction periods. Set *quick, accelerator=1440* as text value for `procurementMethodDetails` for the time frames to be reduced in 1440 times. This mechanism works only on the sandbox.
 
-:submissionMethodDetails:
-  string, optional 
-
-  Parameter that works only with mode = "test" and speeds up auction start date. 
-
-  Possible value is quick.
-
-:documents:
-  Array of :ref:`documents` objects, optional
- 
-  |ocdsDescription|
-  All documents and attachments related to the auction.
-
 :value:
   :ref:`value`, required
 
@@ -65,7 +52,7 @@ Schema
 
   Details which uniquely identify a bank account, and are used when making or receiving a payment.
   
-:status: 
+:status:
   string, required
 
   Auction status within which the lot is being sold:
@@ -84,13 +71,8 @@ Schema
 | `unsuccessful`| The process has been unsuccessful.                    |
 +---------------+-------------------------------------------------------+
 
-:contracts:
-  Array of :ref:`contracts`, auto-generated, read-only
-
-  Information of the related contract.
-
 :relatedProcessID:
-  uuid, required
+  uuid, auto-generated, read-only
 
   Internal id of the procedure.
 
@@ -178,30 +160,3 @@ Schema
   * `UA-EDR`; 
   * `UA-MFO`;
   * `accountNumber`.
-
-.. _contracts:
-
-Сontracts
-=========
-
-Schema
-------
-
-:type:
-  string, required, auto-generated, read-only
-
-  Type of the contract. The only value is `yoke`.
-
-:contractID:
-  string, required, auto-generated, read-only
-
-  The contract identifier to refer to in “paper” documentation.
-
-  Added as long as the contract is being created within the Module of Contracting.
-
-:relatedProcessID:
-  uuid, required, auto-generated, read-only
-
-  Internal identifier of the object within the Module of Contracting.
-
-  Added as long as the contract is being created within the Module of Contracting.
