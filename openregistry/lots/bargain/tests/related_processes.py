@@ -44,8 +44,8 @@ class RelatedProcessesTestMixin(RelatedProcessesTestMixinBase):
             'relatedProcessID': '2' * 32
         }
         data['relatedProcesses'] = (
-            related_process_1,
-            related_process_1,
+           related_process_1,
+           related_process_1,
         )
         response = self.app.post_json(
             self.base_resource_collection_url,
@@ -101,8 +101,10 @@ class RelatedProcessesTestMixin(RelatedProcessesTestMixinBase):
         related_process_id = response.json['data']['id']
         self.assertEqual(response.status, '201 Created')
         self.assertIn('id', response.json['data'])
-        self.assertEqual(response.json['data']['relatedProcessID'],
-                         self.initial_related_process_data['relatedProcessID'])
+        self.assertEqual(
+            response.json['data']['relatedProcessID'],
+            self.initial_related_process_data['relatedProcessID']
+        )
         self.assertEqual(response.json['data']['type'], self.initial_related_process_data['type'])
 
         self.set_status('pending')

@@ -1,4 +1,4 @@
-PATCH /api/2.5/lots/e9e3038d954349829906804353259fbe HTTP/1.0
+PATCH /api/2.5/lots/3596e6588a2e44bcb330c0d384269a8f HTTP/1.0
 Authorization: Basic Y29uY2llcmdlOg==
 Content-Length: 38
 Content-Type: application/json
@@ -16,18 +16,21 @@ X-Content-Type-Options: nosniff
 {
   "data": {
     "status": "active.auction", 
-    "rectificationPeriod": {
-      "startDate": "2018-08-18T17:17:30.782605+03:00", 
-      "endDate": "2018-08-19T17:17:30.782605+03:00"
+    "lotHolder": {
+      "identifier": {
+        "scheme": "AE-ADCD", 
+        "id": "11111-4"
+      }, 
+      "name": "Власник лоту"
     }, 
-    "lotID": "UA-LR-DGF-2018-08-21-000003", 
+    "lotID": "UA-LR-DGF-2019-02-07-000003", 
     "description": "Нежитлове приміщення для збереження насіння", 
-    "title": "title", 
+    "title": "Нежитлове приміщення", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "9b98d84c910b4fdea2a72dc849a21f1c"
+        "id": "7f8c98e55ad3420fbad2fcf75e8790f3"
       }
     ], 
     "items": [
@@ -58,29 +61,23 @@ X-Content-Type-Options: nosniff
         "quantity": 5.0001
       }
     ], 
-    "lotType": "loki", 
-    "lotHolder": {
-      "identifier": {
-        "scheme": "AE-ADCD", 
-        "id": "11111-4"
-      }, 
-      "name": "Власник лоту"
-    }, 
+    "lotType": "bargain", 
     "decisions": [
       {
-        "decisionDate": "2018-08-21T17:17:30.800691+03:00", 
-        "decisionID": "decisionAssetID", 
-        "id": "53deb689ba3a41fbb28e0b72bb491fc3", 
+        "decisionDate": "2019-02-07T16:47:39.326339+02:00", 
+        "decisionID": "initialDecisionID", 
+        "id": "6d8ef55fb62543e38db8c501f7d81e16", 
         "decisionOf": "lot"
       }, 
       {
-        "decisionDate": "2018-08-21T17:17:30.800720+03:00", 
-        "decisionID": "decisionAssetID", 
-        "id": "81befcbd3a4844baad9391e64bc1f20b", 
-        "decisionOf": "lot"
+        "relatedItem": "ca2ce2dbf0b149f6893d3b7010991f4b", 
+        "decisionDate": "2019-02-07T16:47:39.549328+02:00", 
+        "decisionID": "11111-4-5", 
+        "id": "46426b71ae4949f7aaf3ce2d9af94cd9", 
+        "decisionOf": "asset"
       }
     ], 
-    "dateModified": "2018-08-21T17:17:31.071709+03:00", 
+    "dateModified": "2019-02-07T16:47:39.950507+02:00", 
     "owner": "broker", 
     "lotCustodian": {
       "contactPoint": {
@@ -109,134 +106,41 @@ X-Content-Type-Options: nosniff
           ], 
           "bankName": "name of bank"
         }, 
-        "minimalStep": {
-          "currency": "UAH", 
-          "amount": 300.87, 
-          "valueAddedTaxIncluded": true
-        }, 
-        "auctionPeriod": {
-          "startDate": "2018-08-29T17:22:26.797647+03:00"
-        }, 
-        "registrationFee": {
-          "currency": "UAH", 
-          "amount": 700.87
-        }, 
-        "procurementMethodType": "sellout.english", 
+        "procurementMethodType": "procedure.name", 
         "value": {
           "currency": "UAH", 
           "amount": 3000.87, 
           "valueAddedTaxIncluded": true
         }, 
-        "id": "b313b3ec74e24599be90058df3ad3f59", 
-        "auctionParameters": {
-          "type": "english"
-        }, 
-        "tenderAttempts": 1, 
+        "id": "78c2b3e9414f4c0895796e291a71f447", 
         "guarantee": {
           "currency": "UAH", 
           "amount": 700.87
-        }
-      }, 
-      {
-        "status": "scheduled", 
-        "bankAccount": {
-          "accountIdentification": [
-            {
-              "scheme": "accountNumber", 
-              "id": "111111-8", 
-              "description": "some description"
-            }
-          ], 
-          "bankName": "name of bank"
-        }, 
-        "minimalStep": {
-          "currency": "UAH", 
-          "amount": 150.44, 
-          "valueAddedTaxIncluded": true
-        }, 
-        "registrationFee": {
-          "currency": "UAH", 
-          "amount": 700.87
-        }, 
-        "procurementMethodType": "sellout.english", 
-        "value": {
-          "currency": "UAH", 
-          "amount": 1500.43, 
-          "valueAddedTaxIncluded": true
-        }, 
-        "tenderingDuration": "P25DT12H", 
-        "id": "1bc5242088eb44a5bc8bafd1117aefdd", 
-        "auctionParameters": {
-          "type": "english"
-        }, 
-        "tenderAttempts": 2, 
-        "guarantee": {
-          "currency": "UAH", 
-          "amount": 350.44
-        }
-      }, 
-      {
-        "status": "scheduled", 
-        "bankAccount": {
-          "accountIdentification": [
-            {
-              "scheme": "accountNumber", 
-              "id": "111111-8", 
-              "description": "some description"
-            }
-          ], 
-          "bankName": "name of bank"
-        }, 
-        "minimalStep": {
-          "currency": "UAH", 
-          "amount": 0.0, 
-          "valueAddedTaxIncluded": true
-        }, 
-        "registrationFee": {
-          "currency": "UAH", 
-          "amount": 700.87
-        }, 
-        "procurementMethodType": "sellout.insider", 
-        "value": {
-          "currency": "UAH", 
-          "amount": 1500.43, 
-          "valueAddedTaxIncluded": true
-        }, 
-        "tenderingDuration": "P25DT12H", 
-        "id": "fbeb1ec5cadd4590a8607ed1c4583cce", 
-        "auctionParameters": {
-          "type": "insider", 
-          "dutchSteps": 99
-        }, 
-        "tenderAttempts": 3, 
-        "guarantee": {
-          "currency": "UAH", 
-          "amount": 350.44
         }
       }
     ], 
-    "date": "2018-08-21T17:17:31.071534+03:00", 
+    "date": "2019-02-07T16:47:39.950328+02:00", 
     "documents": [
       {
         "description": "Перелік та реквізити авторизованих електронних майданчиків (найменування установи банку, її адреса та номери рахунків, відкритих для внесення гарантійного внеску, реєстраційного внеску)", 
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2018-08-21T17:17:30.140673+03:00", 
+        "datePublished": "2019-02-07T16:47:39.331374+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2018-08-21T17:17:30.140701+03:00", 
-        "id": "f820515674164654994e518c9b6ca24b"
+        "dateModified": "2019-02-07T16:47:39.331396+02:00", 
+        "id": "c5c0f9879b394ed0a6a278a7e3aa7b07"
       }
     ], 
     "relatedProcesses": [
       {
         "identifier": "UA-AR-P-2018-08-17-000002-1", 
         "type": "asset", 
-        "id": "46701ef2c0444d56bf92e1f95be160c7", 
-        "relatedProcessID": "15c02e069a0b42da8e0de2cc307a234b"
+        "id": "66682099593d40149e6fafd02a4decb1", 
+        "relatedProcessID": "972e8bc3ca744f05b206acc360f5a60f"
       }
     ], 
-    "id": "e9e3038d954349829906804353259fbe"
+    "id": "3596e6588a2e44bcb330c0d384269a8f"
   }
 }
 

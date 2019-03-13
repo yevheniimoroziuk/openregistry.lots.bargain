@@ -7,14 +7,12 @@ from uuid import uuid4
 from openregistry.lots.core.tests.base import PrefixedRequestClass, DumpsTestAppwebtest
 from openregistry.lots.bargain.tests.base import BaseLotWebTest
 from openregistry.lots.bargain.tests.json_data import (
-    test_loki_lot_data,
     test_loki_item_data,
-    auction_english_data,
-    auction_second_english_data
+    auction_common
 )
-from openregistry.lots.bargain.models import Lot, Period
+from openregistry.lots.bargain.models import Lot
 from openregistry.lots.bargain.tests.blanks.lot_blanks import add_decisions, add_cancellationDetails_document
-from openregistry.lots.core.utils import get_now, calculate_business_date
+from openregistry.lots.core.utils import get_now
 from openprocurement.api.config import DS
 from openprocurement.api.tests.base import test_config_data
 DumpsTestAppwebtest.hostname = "lb.api-sandbox.registry.ea2.openprocurement.net"
@@ -39,6 +37,10 @@ class LotResourceTest(BaseLotWebTest):
         self.app.app.registry.use_docservice=True
         self.lot_model = Lot
 
+        self.initial_data = deepcopy(self.initial_data)
+        self.initial_data.pop('title', '')
+        self.initial_data.pop('description', '')
+
     def from_initial_to_decisions(self):
         request_path = '/?opt_pretty=1'
         self.initial_data['decisions'] = [
@@ -59,9 +61,8 @@ class LotResourceTest(BaseLotWebTest):
         self.assertEqual(response.status, '200 OK')
 
         response = self.app.get('/{}/auctions'.format(lot_id))
-        auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
+        auctions = response.json['data']
         english = auctions[0]
-        second_english = auctions[1]
         access_header = {'X-Access-Token': str(owner_token)}
 
         # Switch to 'composing'
@@ -72,13 +73,7 @@ class LotResourceTest(BaseLotWebTest):
         # Compose lot with first english data
         response = self.app.patch_json(
             '/{}/auctions/{}'.format(lot_id, english['id']),
-            params={'data': auction_english_data}, headers=access_header)
-        self.assertEqual(response.status, '200 OK')
-
-        # Compose lot with second english data
-        response = self.app.patch_json(
-            '/{}/auctions/{}'.format(lot_id, second_english['id']),
-            params={'data': auction_second_english_data}, headers=access_header)
+            params={'data': auction_common}, headers=access_header)
         self.assertEqual(response.status, '200 OK')
 
         # Add relatedProcess to lot
@@ -157,9 +152,8 @@ class LotResourceTest(BaseLotWebTest):
             self.assertEqual(response.status, '200 OK')
 
         response = self.app.get('/{}/auctions'.format(lot_id))
-        auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
+        auctions = response.json['data']
         english = auctions[0]
-        second_english = auctions[1]
         access_header = {'X-Access-Token': str(owner_token)}
 
         # Switch to 'composing'
@@ -174,15 +168,7 @@ class LotResourceTest(BaseLotWebTest):
         with open('docs/source/tutorial/compose_lot_patch_1.http', 'w') as self.app.file_obj:
             response = self.app.patch_json(
                 '/{}/auctions/{}'.format(lot_id, english['id']),
-                params={'data': auction_english_data}, headers=access_header)
-            self.assertEqual(response.status, '200 OK')
-
-        # Compose lot with second english data
-        #
-        with open('docs/source/tutorial/compose_lot_patch_2.http', 'w') as self.app.file_obj:
-            response = self.app.patch_json(
-                '/{}/auctions/{}'.format(lot_id, second_english['id']),
-                params={'data': auction_second_english_data}, headers=access_header)
+                params={'data': auction_common}, headers=access_header)
             self.assertEqual(response.status, '200 OK')
 
         # Add relatedProcess to lot
@@ -220,12 +206,6 @@ class LotResourceTest(BaseLotWebTest):
 
         second_lot_id = response.json['data']['id']
         second_owner_token = response.json['access']['token']
-
-        response = self.app.get('/{}/auctions'.format(second_lot_id))
-        auctions = sorted(response.json['data'], key=lambda a: a['tenderAttempts'])
-        english = auctions[0]
-        second_english = auctions[1]
-        second_access_header = {'X-Access-Token': str(second_owner_token)}
 
         # Switch to 'composing'
         #
@@ -420,44 +400,21 @@ class LotResourceTest(BaseLotWebTest):
                                        {'data': concierge_patch})
         self.assertEqual(response.status, '200 OK')
 
-        rectificationPeriod = Period()
-        rectificationPeriod.startDate = get_now() - timedelta(3)
-        rectificationPeriod.endDate = calculate_business_date(rectificationPeriod.startDate,
-                                                              timedelta(1), None)
-          # change rectification period in db
-        fromdb = self.db.get(lot['id'])
-        fromdb = self.lot_model(fromdb)
-
-        fromdb.status = 'pending'
-        fromdb.decisions = [
-            {
-                'decisionDate': get_now().isoformat(),
-                'decisionID': 'decisionAssetID'
-            },
-            {
-                'decisionDate': get_now().isoformat(),
-                'decisionID': 'decisionAssetID'
-            }
-        ]
-        fromdb.title = 'title'
-        fromdb.rectificationPeriod = rectificationPeriod
-        fromdb = fromdb.store(self.db)
-        lot = fromdb
-        self.assertEqual(fromdb.id, lot['id'])
-
           # switch lot to 'active.salable'
         response = self.app.get('/{}'.format(lot['id']))
         self.assertEqual(response.status, '200 OK')
         self.assertEqual(response.json['data']['id'], lot['id'])
 
-        self.app.authorization = ('Basic', ('chronograph', ''))
-        response = self.app.patch_json('/{}'.format(lot['id']),
-                                       params={'data': {'title': ' PATCHED'}})
-        self.assertNotEqual(response.json['data']['title'], 'PATCHED')
-        self.assertEqual(lot['title'], response.json['data']['title'])
-        self.assertEqual(response.json['data']['status'], 'active.salable')
 
-        with open('docs/source/tutorial/concierge-patched-lot-to-active.salable.http', 'w') as self.app.file_obj:
+        with open('docs/source/tutorial/owner-patch-lot-to-active.salable.http', 'w') as self.app.file_obj:
+            self.app.authorization = ('Basic', ('broker', ''))
+            response = self.app.patch_json(
+                '/{}?acc_token={}'.format(lot['id'], owner_token),
+                {'data': {'status': 'active.salable'}}
+            )
+            self.assertEqual(response.json['data']['status'], 'active.salable')
+
+        with open('docs/source/tutorial/owner-patched-lot-to-active.salable.http', 'w') as self.app.file_obj:
             response = self.app.get('/{}'.format(lot_id))
             self.assertEqual(response.status, '200 OK')
 
@@ -524,41 +481,12 @@ class LotResourceTest(BaseLotWebTest):
                                        {'data': {"status": 'pending', 'items': asset_items}})
         self.assertEqual(response.status, '200 OK')
 
-        rectificationPeriod = Period()
-        rectificationPeriod.startDate = get_now() - timedelta(3)
-        rectificationPeriod.endDate = calculate_business_date(rectificationPeriod.startDate,
-                                                              timedelta(1), None)
-          # change rectification period in db
-        fromdb = self.db.get(lot['id'])
-        fromdb = self.lot_model(fromdb)
-
-        fromdb.status = 'pending'
-        fromdb.decisions = [
-            {
-                'decisionDate': get_now().isoformat(),
-                'decisionID': 'decisionAssetID'
-            },
-            {
-                'decisionDate': get_now().isoformat(),
-                'decisionID': 'decisionAssetID'
-            }
-        ]
-        fromdb.title = 'title'
-        fromdb.rectificationPeriod = rectificationPeriod
-        fromdb = fromdb.store(self.db)
-        lot = fromdb
-        self.assertEqual(fromdb.id, lot['id'])
-
           # switch lot to 'active.salable'
-        response = self.app.get('/{}'.format(lot['id']))
-        self.assertEqual(response.status, '200 OK')
-        self.assertEqual(response.json['data']['id'], lot['id'])
-
-        self.app.authorization = ('Basic', ('chronograph', ''))
-        response = self.app.patch_json('/{}'.format(lot['id']),
-                                       params={'data': {'title': ' PATCHED'}})
-        self.assertNotEqual(response.json['data']['title'], 'PATCHED')
-        self.assertEqual(lot['title'], response.json['data']['title'])
+        self.app.authorization = ('Basic', ('broker', ''))
+        response = self.app.patch_json(
+            '/{}?acc_token={}'.format(lot['id'], owner_token),
+            {'data': {'status': 'active.salable'}}
+        )
         self.assertEqual(response.json['data']['status'], 'active.salable')
 
         response = self.app.get('/{}'.format(lot_id))
