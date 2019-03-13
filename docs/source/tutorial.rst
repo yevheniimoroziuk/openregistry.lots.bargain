@@ -52,14 +52,6 @@ The object you're trying to add initially receives `draft` status. You should ma
 
 You see that `lot.auctions` structure has been added with the set of auto-generated data. 
 
-Now let's add extra auction conditions. Note that the information is being added to each of three auctions one by one:
-
-.. literalinclude:: tutorial/compose_lot_patch_1.http
-   :language: javascript
-
-.. literalinclude:: tutorial/compose_lot_patch_2.http
-   :language: javascript
-
 Now let's add relatedProcesses:
 
 .. literalinclude:: tutorial/add_related_process_1.http
@@ -72,58 +64,6 @@ To enable further manipulations with the lot, its status should be manually swit
 
 After concierge switch lot status to `pending`.
 Owner has an opportunity to switch lot status to `active.salable`.
-The procedure will be formed automatically after this action.:
-
-.. literalinclude:: tutorial/owner-patch-lot-to-active.salable.http
-   :language: javascript
-
-Success! Now we can see that new object was created. Response code is `201`
-and `Location` response header reports the location of the created object.  The
-body of response reveals the information about the created asset: its internal
-`id` (that matches the `Location` segment), its official `assetID` and
-`dateModified` datestamp stating the moment when asset was last
-modified. Note that lot is created with `pending` status.
-
-Let's access the URL of the created object (the `Location` header of the response):
-
-.. literalinclude::tutorial/blank-lot-view.http
-   :language: javascript
-
-.. XXX body is empty for some reason (printf fails)
-
-We can see the same response we got after creating lot.
-
-.. literalinclude:: tutorial/lot-post-2pc.http
-   :language: javascript
-
-Let's see what listing of lots reveals us:
-
-.. literalinclude:: tutorial/initial-lot-listing.http
-   :language: javascript
-
-We do see the internal `id` of the lot (that can be used to construct full URL http://lb.api-sandbox.registry.ea2.openprocurement.net/api/2.4/lots/8286cc7863814271afe23cb2646237ed`) and its `dateModified` date stamp.
-
-Let's try creating another lot:
-
-.. literalinclude:: tutorial/create-second-lot.http
-   :language: javascript
-
-.. XXX patching lot to pending.dissolution
-
-And again we have `201 Created` response code, `Location` header and body with extra `id`, `lotID`, and `dateModified` properties.
-
-Switch second lot to 'composing' status':
-
-.. literalinclude:: tutorial/second-lot-to-composing.http
-   :language: javascript
-
-Let's check what lot registry contains:
-
-.. literalinclude:: tutorial/listing-with-some-lots.http
-   :language: javascript
-
-And indeed we have 2 lots now.
-
 
 Modifying Lot
 -------------
