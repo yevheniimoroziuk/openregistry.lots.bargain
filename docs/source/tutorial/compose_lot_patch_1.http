@@ -1,9 +1,9 @@
-PATCH /api/2.5/lots/952ec4e8a05d437892497d1310961cd2/auctions/2b1c95c81b524588b599755ee22e5485 HTTP/1.0
+PATCH /api/2.5/lots/86f5b7cf26c4446ca23707c1ed405656/auctions/0253e7e2c9aa4d2c9c9cad1c38ddb88e HTTP/1.0
 Authorization: Basic YnJva2VyOg==
 Content-Length: 296
 Content-Type: application/json
 Host: lb.api-sandbox.registry.ea2.openprocurement.net
-X-Access-Token: 4595f9cba04a41cdacda804241fa2bd8
+X-Access-Token: 7e25ecd2e7254c469bb16c87fb5adf51
 DATA:
 {
   "data": {
@@ -45,13 +45,13 @@ X-Content-Type-Options: nosniff
       ], 
       "bankName": "name of bank"
     }, 
-    "procurementMethodType": "procedure.name", 
+    "procurementMethodType": "reporting", 
     "value": {
       "currency": "UAH", 
       "amount": 3000.87, 
       "valueAddedTaxIncluded": true
     }, 
-    "id": "2b1c95c81b524588b599755ee22e5485", 
+    "id": "0253e7e2c9aa4d2c9c9cad1c38ddb88e", 
     "guarantee": {
       "currency": "UAH", 
       "amount": 700.87
