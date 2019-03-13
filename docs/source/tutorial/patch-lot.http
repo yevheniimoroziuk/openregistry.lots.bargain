@@ -1,4 +1,4 @@
-PATCH /api/2.5/lots/8fcac6a951c243c1aa3b24aa65042c8b?acc_token=2e30256a2e7047489ae8c15c0a3c1c78 HTTP/1.0
+PATCH /api/2.5/lots/51885c40fd69474087424adb80403ac3?acc_token=fadbe1f5c36c4b0db64b6a3a0621f22f HTTP/1.0
 Authorization: Basic YnJva2VyOg==
 Content-Length: 53
 Content-Type: application/json
@@ -16,16 +16,16 @@ X-Content-Type-Options: nosniff
 {
   "data": {
     "status": "composing", 
-    "lotID": "UA-LR-DGF-2019-02-07-000003", 
+    "lotID": "UA-LR-DGF-2019-03-12-000003", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "b2692a10434e4c3e8815c2b75758fd6b"
+        "id": "226bc4dcebc549c8998b1c1ef53ecb7c"
       }
     ], 
-    "lotType": "bargain", 
-    "dateModified": "2019-02-07T16:47:37.714755+02:00", 
+    "lotType": "redemption", 
+    "dateModified": "2019-03-12T13:28:56.730774+02:00", 
     "owner": "broker", 
     "documents": [
       {
@@ -33,29 +33,29 @@ X-Content-Type-Options: nosniff
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2019-02-07T16:47:37.645177+02:00", 
+        "datePublished": "2019-03-12T13:28:56.629617+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2019-02-07T16:47:37.645197+02:00", 
-        "id": "4267cd9925234795a2faef5dc22586d2"
+        "dateModified": "2019-03-12T13:28:56.629663+02:00", 
+        "id": "54fd16b06e7941809a2e01f72ef85ecd"
       }
     ], 
     "auctions": [
       {
         "status": "scheduled", 
-        "procurementMethodType": "procedure.name", 
-        "id": "56949f3c5bc34297b4174595e1c3cbd2"
+        "procurementMethodType": "reporting", 
+        "id": "f8709898a0cd459cac6935a20847d6b8"
       }
     ], 
-    "date": "2019-02-07T16:47:37.714561+02:00", 
+    "date": "2019-03-12T13:28:56.730490+02:00", 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID", 
-        "id": "814f237bce194d6da66245108009feb8", 
+        "id": "7bc35bca8f3b46b4832f1d29dd5ff664", 
         "decisionOf": "lot"
       }
     ], 
-    "id": "8fcac6a951c243c1aa3b24aa65042c8b"
+    "id": "51885c40fd69474087424adb80403ac3"
   }
 }
 

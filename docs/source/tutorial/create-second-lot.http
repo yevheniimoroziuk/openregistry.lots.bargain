@@ -1,15 +1,15 @@
 POST /api/2.5/lots?opt_pretty=1 HTTP/1.0
 Authorization: Basic YnJva2VyOg==
-Content-Length: 136
+Content-Length: 139
 Content-Type: application/json
 Host: lb.api-sandbox.registry.ea2.openprocurement.net
 DATA:
 {
   "data": {
-    "lotType": "bargain", 
+    "lotType": "redemption", 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID"
       }
     ]
@@ -18,25 +18,25 @@ DATA:
 
 Response: 201 Created
 Content-Type: application/json
-Location: http://lb.api-sandbox.registry.ea2.openprocurement.net/api/2.5/lots/8fcac6a951c243c1aa3b24aa65042c8b
+Location: http://lb.api-sandbox.registry.ea2.openprocurement.net/api/2.5/lots/51885c40fd69474087424adb80403ac3
 X-Content-Type-Options: nosniff
 {
   "access": {
-    "transfer": "8087710b710b44dd96bf3d4a04211638", 
-    "token": "2e30256a2e7047489ae8c15c0a3c1c78"
+    "transfer": "772367bf069244c382850010c21d72dc", 
+    "token": "fadbe1f5c36c4b0db64b6a3a0621f22f"
   }, 
   "data": {
     "status": "draft", 
-    "lotID": "UA-LR-DGF-2019-02-07-000003", 
+    "lotID": "UA-LR-DGF-2019-03-12-000003", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "b2692a10434e4c3e8815c2b75758fd6b"
+        "id": "226bc4dcebc549c8998b1c1ef53ecb7c"
       }
     ], 
-    "lotType": "bargain", 
-    "dateModified": "2019-02-07T16:47:37.665963+02:00", 
+    "lotType": "redemption", 
+    "dateModified": "2019-03-12T13:28:56.658438+02:00", 
     "owner": "broker", 
     "documents": [
       {
@@ -44,29 +44,29 @@ X-Content-Type-Options: nosniff
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2019-02-07T16:47:37.645177+02:00", 
+        "datePublished": "2019-03-12T13:28:56.629617+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2019-02-07T16:47:37.645197+02:00", 
-        "id": "4267cd9925234795a2faef5dc22586d2"
+        "dateModified": "2019-03-12T13:28:56.629663+02:00", 
+        "id": "54fd16b06e7941809a2e01f72ef85ecd"
       }
     ], 
     "auctions": [
       {
         "status": "scheduled", 
-        "procurementMethodType": "procedure.name", 
-        "id": "56949f3c5bc34297b4174595e1c3cbd2"
+        "procurementMethodType": "reporting", 
+        "id": "f8709898a0cd459cac6935a20847d6b8"
       }
     ], 
-    "date": "2019-02-07T16:47:37.663255+02:00", 
+    "date": "2019-03-12T13:28:56.655923+02:00", 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID", 
-        "id": "814f237bce194d6da66245108009feb8", 
+        "id": "7bc35bca8f3b46b4832f1d29dd5ff664", 
         "decisionOf": "lot"
       }
     ], 
-    "id": "8fcac6a951c243c1aa3b24aa65042c8b"
+    "id": "51885c40fd69474087424adb80403ac3"
   }
 }
 

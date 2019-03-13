@@ -1,4 +1,4 @@
-PATCH /api/2.5/lots/3596e6588a2e44bcb330c0d384269a8f?acc_token=281e0b58f640454bb1560a45d127dc49 HTTP/1.0
+PATCH /api/2.5/lots/c26137d9a1424fd8a9cd313f7502b48e?acc_token=4497cce23006422c81a27a6a1f51e393 HTTP/1.0
 Authorization: Basic YnJva2VyOg==
 Content-Length: 38
 Content-Type: application/json
@@ -23,14 +23,14 @@ X-Content-Type-Options: nosniff
       }, 
       "name": "Власник лоту"
     }, 
-    "lotID": "UA-LR-DGF-2019-02-07-000003", 
+    "lotID": "UA-LR-DGF-2019-03-12-000003", 
     "description": "Нежитлове приміщення для збереження насіння", 
     "title": "Нежитлове приміщення", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "7f8c98e55ad3420fbad2fcf75e8790f3"
+        "id": "3a939cb72daf4374846d6ef112122e40"
       }
     ], 
     "items": [
@@ -61,23 +61,23 @@ X-Content-Type-Options: nosniff
         "quantity": 5.0001
       }
     ], 
-    "lotType": "bargain", 
+    "lotType": "redemption", 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:39.326339+02:00", 
+        "decisionDate": "2019-03-12T13:28:58.772651+02:00", 
         "decisionID": "initialDecisionID", 
-        "id": "6d8ef55fb62543e38db8c501f7d81e16", 
+        "id": "3d1881310a034b9b8815b310c5b0937b", 
         "decisionOf": "lot"
       }, 
       {
-        "relatedItem": "ca2ce2dbf0b149f6893d3b7010991f4b", 
-        "decisionDate": "2019-02-07T16:47:39.549328+02:00", 
+        "relatedItem": "a302872674f24bf490868f2ec11cb4b7", 
+        "decisionDate": "2019-03-12T13:28:59.004934+02:00", 
         "decisionID": "11111-4-5", 
-        "id": "46426b71ae4949f7aaf3ce2d9af94cd9", 
+        "id": "6fabec1561294bca9e473e55f1e04176", 
         "decisionOf": "asset"
       }
     ], 
-    "dateModified": "2019-02-07T16:47:39.835344+02:00", 
+    "dateModified": "2019-03-12T13:28:59.350022+02:00", 
     "owner": "broker", 
     "lotCustodian": {
       "contactPoint": {
@@ -106,41 +106,41 @@ X-Content-Type-Options: nosniff
           ], 
           "bankName": "name of bank"
         }, 
-        "procurementMethodType": "procedure.name", 
+        "procurementMethodType": "reporting", 
         "value": {
           "currency": "UAH", 
           "amount": 3000.87, 
           "valueAddedTaxIncluded": true
         }, 
-        "id": "78c2b3e9414f4c0895796e291a71f447", 
+        "id": "b52ea692ee6e4a31bf5570d622a8fd6e", 
         "guarantee": {
           "currency": "UAH", 
           "amount": 700.87
         }
       }
     ], 
-    "date": "2019-02-07T16:47:39.835162+02:00", 
+    "date": "2019-03-12T13:28:59.349783+02:00", 
     "documents": [
       {
         "description": "Перелік та реквізити авторизованих електронних майданчиків (найменування установи банку, її адреса та номери рахунків, відкритих для внесення гарантійного внеску, реєстраційного внеску)", 
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2019-02-07T16:47:39.331374+02:00", 
+        "datePublished": "2019-03-12T13:28:58.779248+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2019-02-07T16:47:39.331396+02:00", 
-        "id": "c5c0f9879b394ed0a6a278a7e3aa7b07"
+        "dateModified": "2019-03-12T13:28:58.779272+02:00", 
+        "id": "e9068a19ed4b4d509a3c58c464c90469"
       }
     ], 
     "relatedProcesses": [
       {
         "identifier": "UA-AR-P-2018-08-17-000002-1", 
         "type": "asset", 
-        "id": "66682099593d40149e6fafd02a4decb1", 
-        "relatedProcessID": "972e8bc3ca744f05b206acc360f5a60f"
+        "id": "512434358ee849d7a7637d2d5503b6fa", 
+        "relatedProcessID": "1076a04e6874433ea474b8c59bf99f44"
       }
     ], 
-    "id": "3596e6588a2e44bcb330c0d384269a8f"
+    "id": "c26137d9a1424fd8a9cd313f7502b48e"
   }
 }
 

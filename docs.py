@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 from requests import Session
-from datetime import timedelta
 from uuid import uuid4
 
-from openregistry.lots.core.tests.base import PrefixedRequestClass, DumpsTestAppwebtest
+from openregistry.lots.core.tests.base import (
+    PrefixedRequestClass,
+    DumpsTestAppwebtest,
+    connection_mock_config,
+    MOCK_CONFIG as BASE_MOCK_CONFIG
+)
 from openregistry.lots.bargain.tests.base import BaseLotWebTest
 from openregistry.lots.bargain.tests.json_data import (
     test_loki_item_data,
     auction_common
 )
+
 from openregistry.lots.bargain.models import Lot
 from openregistry.lots.bargain.tests.blanks.lot_blanks import add_decisions, add_cancellationDetails_document
 from openregistry.lots.core.utils import get_now
@@ -19,8 +24,27 @@ DumpsTestAppwebtest.hostname = "lb.api-sandbox.registry.ea2.openprocurement.net"
 SESSION = Session()
 
 
+PARTIAL_MOCK_CONFIG = {
+    "lots.bargain": {
+        "use_default": False,
+        "aliases": ['redemption'],
+        "accreditation": {
+            "create": [1],
+            "edit": [2]
+        }
+    }
+}
+
+
+MOCK_CONFIG = connection_mock_config(PARTIAL_MOCK_CONFIG,
+                                     base=BASE_MOCK_CONFIG,
+                                     connector=('plugins', 'api', 'plugins',
+                                                'lots.core', 'plugins'))
+
+
 class LotResourceTest(BaseLotWebTest):
     record_http = True
+    mock_config = MOCK_CONFIG
 
     def setUp(self):
         super(LotResourceTest, self).setUp()
@@ -38,6 +62,7 @@ class LotResourceTest(BaseLotWebTest):
         self.lot_model = Lot
 
         self.initial_data = deepcopy(self.initial_data)
+        self.initial_data['lotType'] = 'redemption'
         self.initial_data.pop('title', '')
         self.initial_data.pop('description', '')
 

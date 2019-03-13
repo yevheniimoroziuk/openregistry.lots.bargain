@@ -1,4 +1,4 @@
-PATCH /api/2.5/lots/952ec4e8a05d437892497d1310961cd2?acc_token=4595f9cba04a41cdacda804241fa2bd8 HTTP/1.0
+PATCH /api/2.5/lots/86f5b7cf26c4446ca23707c1ed405656?acc_token=7e25ecd2e7254c469bb16c87fb5adf51 HTTP/1.0
 Authorization: Basic YnJva2VyOg==
 Content-Length: 36
 Content-Type: application/json
@@ -16,24 +16,24 @@ X-Content-Type-Options: nosniff
 {
   "data": {
     "status": "verification", 
-    "lotID": "UA-LR-DGF-2019-02-07-000002", 
+    "lotID": "UA-LR-DGF-2019-03-12-000002", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "d943128ab38546fd84e5ed04a5d7737b"
+        "id": "9a501623597642f2a58793bc6f2f2a48"
       }
     ], 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID", 
-        "id": "12eba007372d47e2aa42fcf23f0ed644", 
+        "id": "8f5a2e677e4a49fda06c850aa0ea98ea", 
         "decisionOf": "lot"
       }
     ], 
-    "lotType": "bargain", 
-    "dateModified": "2019-02-07T16:47:37.598774+02:00", 
+    "lotType": "redemption", 
+    "dateModified": "2019-03-12T13:28:56.550936+02:00", 
     "owner": "broker", 
     "documents": [
       {
@@ -41,10 +41,10 @@ X-Content-Type-Options: nosniff
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2019-02-07T16:47:37.372823+02:00", 
+        "datePublished": "2019-03-12T13:28:56.286818+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2019-02-07T16:47:37.372844+02:00", 
-        "id": "bfabdb6721a3490db185ce4af98e6ebf"
+        "dateModified": "2019-03-12T13:28:56.286854+02:00", 
+        "id": "212eafc66f6d4ef3bd8aac70efc52354"
       }
     ], 
     "auctions": [
@@ -60,28 +60,28 @@ X-Content-Type-Options: nosniff
           ], 
           "bankName": "name of bank"
         }, 
-        "procurementMethodType": "procedure.name", 
+        "procurementMethodType": "reporting", 
         "value": {
           "currency": "UAH", 
           "amount": 3000.87, 
           "valueAddedTaxIncluded": true
         }, 
-        "id": "2b1c95c81b524588b599755ee22e5485", 
+        "id": "0253e7e2c9aa4d2c9c9cad1c38ddb88e", 
         "guarantee": {
           "currency": "UAH", 
           "amount": 700.87
         }
       }
     ], 
-    "date": "2019-02-07T16:47:37.598550+02:00", 
+    "date": "2019-03-12T13:28:56.550431+02:00", 
     "relatedProcesses": [
       {
         "type": "asset", 
-        "id": "3fcf563ac610489fa92784a21925d215", 
-        "relatedProcessID": "f6e3a91438fe4091a4ecb28daa3cb957"
+        "id": "ed95cd7dfabd4f3da3818ae742d14c36", 
+        "relatedProcessID": "b014dd89b9c94e30964a8ce6dcc68a91"
       }
     ], 
-    "id": "952ec4e8a05d437892497d1310961cd2"
+    "id": "86f5b7cf26c4446ca23707c1ed405656"
   }
 }
 

@@ -1,6 +1,6 @@
 POST /api/2.5/lots?opt_pretty=1 HTTP/1.0
 Authorization: Basic YnJva2VyOg==
-Content-Length: 233
+Content-Length: 236
 Content-Type: application/json
 Host: lb.api-sandbox.registry.ea2.openprocurement.net
 DATA:
@@ -8,15 +8,15 @@ DATA:
   "data": {
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID"
       }
     ], 
-    "lotType": "bargain", 
+    "lotType": "redemption", 
     "relatedProcesses": [
       {
         "type": "asset", 
-        "relatedProcessID": "6e66626e86434027824ed44b1052c89e"
+        "relatedProcessID": "13aca930afb34ab0ab78838811213aac"
       }
     ]
   }
@@ -24,33 +24,33 @@ DATA:
 
 Response: 201 Created
 Content-Type: application/json
-Location: http://lb.api-sandbox.registry.ea2.openprocurement.net/api/2.5/lots/7e8cf4747ea34a78a636238b61fa81f9
+Location: http://lb.api-sandbox.registry.ea2.openprocurement.net/api/2.5/lots/b5caff0875214c02bf220302786d38da
 X-Content-Type-Options: nosniff
 {
   "access": {
-    "transfer": "799c19cdbe124f65ba4257a144565643", 
-    "token": "cdf90788487842fca203f6452befbead"
+    "transfer": "08f0ebbddd9c46749cc6f8b1370ed831", 
+    "token": "9d9a68e7046c4a69a55b5343dc886080"
   }, 
   "data": {
     "status": "draft", 
-    "lotID": "UA-LR-DGF-2019-02-07-000001", 
+    "lotID": "UA-LR-DGF-2019-03-12-000001", 
     "contracts": [
       {
         "status": "scheduled", 
         "type": "yoke", 
-        "id": "ec569f8d7868402294181f488dc10ecc"
+        "id": "f2205eaf4dbb458885e8cd7aa5f1a2d9"
       }
     ], 
     "decisions": [
       {
-        "decisionDate": "2019-02-07T16:47:37.304927+02:00", 
+        "decisionDate": "2019-03-12T13:28:56.203380+02:00", 
         "decisionID": "initialDecisionID", 
-        "id": "a44a07454daa4a32b7791730c010dfc4", 
+        "id": "6c6b3f8570104128b3fc28ca348207c2", 
         "decisionOf": "lot"
       }
     ], 
-    "lotType": "bargain", 
-    "dateModified": "2019-02-07T16:47:37.347352+02:00", 
+    "lotType": "redemption", 
+    "dateModified": "2019-03-12T13:28:56.248759+02:00", 
     "owner": "broker", 
     "documents": [
       {
@@ -58,28 +58,28 @@ X-Content-Type-Options: nosniff
         "title": "Перелік та реквізити авторизованих електронних майданчиків", 
         "url": "https://prozorro.sale/info/elektronni-majdanchiki-ets-prozorroprodazhi-cbd2", 
         "documentOf": "lot", 
-        "datePublished": "2019-02-07T16:47:37.331485+02:00", 
+        "datePublished": "2019-03-12T13:28:56.231779+02:00", 
         "documentType": "x_PlatformLegalDetails", 
-        "dateModified": "2019-02-07T16:47:37.331505+02:00", 
-        "id": "6318a92e8d014647a4c3f2efd83fdddc"
+        "dateModified": "2019-03-12T13:28:56.231801+02:00", 
+        "id": "7ceb59e74f4746a185a20fb231ec7ba0"
       }
     ], 
     "auctions": [
       {
         "status": "scheduled", 
-        "procurementMethodType": "procedure.name", 
-        "id": "386cb0e3b48c439085b0e7c74e75212f"
+        "procurementMethodType": "reporting", 
+        "id": "eb19155463a542f9ae34ee6f9dde84e6"
       }
     ], 
-    "date": "2019-02-07T16:47:37.345356+02:00", 
+    "date": "2019-03-12T13:28:56.246941+02:00", 
     "relatedProcesses": [
       {
         "type": "asset", 
-        "id": "335e0167955e47db89672e8cd18b97ad", 
-        "relatedProcessID": "6e66626e86434027824ed44b1052c89e"
+        "id": "cbed9e6a264142a78cface1e257d82ce", 
+        "relatedProcessID": "13aca930afb34ab0ab78838811213aac"
       }
     ], 
-    "id": "7e8cf4747ea34a78a636238b61fa81f9"
+    "id": "b5caff0875214c02bf220302786d38da"
   }
 }
 
