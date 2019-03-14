@@ -163,6 +163,11 @@ Schema
 
     * `redemption` - lotType for the buyout.
 
+:contracts:
+    Array of :ref:`contracts`, auto-generated, read-only
+
+    Information of the related contract.
+    
 .. _period:
 
 Period
@@ -231,3 +236,30 @@ Schema
     string, auto-generated
 
     Internal id of related asset.
+
+.. _contracts:
+
+Сontracts
+=========
+
+Schema
+------
+
+:type:
+  string, auto-generated, read-only
+
+  Type of the contract. The only value is `yoke`.
+
+:id:
+  uuid, auto-generated, read-only
+
+  Internal identifier of the object within the Module of Contracting.
+
+  Added as long as the contract is being created within the Module of Contracting.
+
+:status:
+  string, auto-generated, read-only
+
+  Status of contract within the Module of Contracting.
+
+  Added as long as the contract is being created within the Module of Contracting.
