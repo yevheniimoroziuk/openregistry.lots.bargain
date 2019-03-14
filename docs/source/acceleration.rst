@@ -17,15 +17,15 @@ To enable acceleration mode you will need to:
 
 .............................
 
-Synchronization
-~~~~~~~~~~~~~~~
+.. Synchronization
+.. ~~~~~~~~~~~~~~~
 
-* During normal auction synchronization via ``/auctions`` test auctions are not visible.
+.. * During normal auction synchronization via ``/auctions`` test auctions are not visible.
 
-* To get test auctions synchronize via ``/auctions?mode=test``.
+.. * To get test auctions synchronize via ``/auctions?mode=test``.
 
-* If you synchronize via ``/auctions?mode=all``, then you will get all auctions.
+.. * If you synchronize via ``/auctions?mode=all``, then you will get all auctions.
 
-* Auction mode can be set only on lot creation (lots.auctions) phase, it can not be set later.
+.. * Auction mode can be set only on lot creation (lots.auctions) phase, it can not be set later.
 
-.. note:: Can not be used for assets.
+ note:: Can not be used for assets.
