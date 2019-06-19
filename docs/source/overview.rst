@@ -47,7 +47,12 @@ https://github.com/openprocurement/openregistry.lots.bargain
 Documentation of related packages
 ---------------------------------
 
-* `Assets Registry <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/index.html>`_
+* `OpenProcurement API <http://api-docs.openprocurement.org/en/latest/>`_
+* `Sellout.english  <http://sellout-english.api-docs.ea2.openprocurement.io/en/latest/>`_
+* `Sellout.Insider <http://api-docs.openprocurement.org/en/latest/>`_
+* `Assets Registry <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/>`_
+* `Lots Registry for procedure Small Scale Privatisation <http://lotsloki.api-docs.registry.ea2.openprocurement.io/en/latest/>`_
+* `Contracting <http://ceasefire.api-docs.ea2.openprocurement.io/en/latest/>`_
 
 API stability
 -------------
